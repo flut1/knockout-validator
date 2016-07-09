@@ -1,0 +1,17 @@
+# copy to .npmignore
+.idea
+node_modules
+typings
+.tscache
+.sass-cache
+.DS_Store
+npm-debug.log
+/coverage
+/dist
+/test/*.js
+!/test/index.js
+
+# only ignore in git
+/lib
+/index.js
+/index.d.ts
