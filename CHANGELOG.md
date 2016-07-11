@@ -41,9 +41,9 @@ For a more detailed explanation please see the API documentation
 Instead of using multiple bindings, you can now use the shortcut binding _validate_:
 ```html
 <!-- without shorthand !-->
-<input type="text" name="day" data-bind="validationRule: validateDay, validationGroup: dateOfBirth, validateOn: 'value', validator: signupValidator">
+<input type="text" name="day" data-bind="validationRule: validateDay, validationGroup: dateOfBirth, validateOn: 'value', validateWith: signupValidator">
 <!-- with shorthand !-->
-<input type="text" name="day" data-bind="validate: {rule : validateDay, group: dateOfBirth, on: value, v: signupValidator}">
+<input type="text" name="day" data-bind="validate: {rule : validateDay, group: dateOfBirth, on: value, with: signupValidator}">
 ```
 
 ### Individual field validation
