@@ -4,5 +4,8 @@
   },
   "devDependencies": {
     "chai": "registry:npm/chai#3.5.0+20160415060238"
+  },
+  "dependencies": {
+    "knockout": "registry:npm/knockout#3.4.0+20160516171930"
   }
 }

@@ -76,5 +76,10 @@
     "yuidoc-mediamonks-theme": "^2.0.2",
     "yuidocjs": "^0.10.0"
   },
-  "dependencies": {}
+  "dependencies": {
+    "seng-disposable": "^1.0.1"
+  },
+  "peerDependencies": {
+    "knockout": ">= 3.3.0 < 4"
+  }
 }
