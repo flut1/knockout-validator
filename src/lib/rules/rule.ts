@@ -4,7 +4,6 @@ export enum ValidationRuleType {
 	COLLECTION_AND,
 	COLLECTION_OR,
 	REGEX,
-	STRING,
 	CHECKED,
 	FUNCTION
 }

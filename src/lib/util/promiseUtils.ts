@@ -1,2 +1,1 @@
-// todo promise import
-export type MaybePromise<T> = Array<T>|T;
+export type MaybePromise<T> = Promise<T>|T;
