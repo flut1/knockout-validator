@@ -55,14 +55,75 @@ const getAllBindingValues = (element:HTMLElement, allBindingsAccessor: ko.AllBin
 	return allBindings;
 };
 
+export const getValueBindingKey = (element:HTMLElement, hasValueBinding:boolean):string =>
+{
+	const tagName = element.tagName.toLowerCase();
+	const typeAttr = element.getAttribute('type');
+	let valueBindingKey = 'value';
+
+	if(tagName === 'input')
+	{
+		if(typeAttr === 'radio')
+		{
+			throw new Error(`Cannot apply validation bindings directly to radio buttons. Please use the
+'validateRadio' binding to validate radio buttons.`);
+		}
+		else if(typeAttr === 'checkbox')
+		{
+			valueBindingKey = 'checked';
+		}
+	}
+	else if(tagName === 'select')
+	{
+		if(element.hasAttribute('multiple'))
+		{
+			if(hasValueBinding)
+			{
+				throw new Error(`Please do not use the value bindings with a multiple-option select element.
+Use the selectedOptions binding instead.`);
+			}
+			valueBindingKey = 'selectedOptions';
+		}
+	}
+	else if(tagName !== 'textarea')
+	{
+		throw new Error(`Cannot apply validation bindings to unsupported <${tagName}> element.`)
+	}
+
+	return valueBindingKey;
+};
+
+export const createValueBinding = (element:HTMLElement, allBindingsAccessor: ko.AllBindingsAccessor, viewModel:any, bindingContext: ko.BindingContext):ko.Observable<any> =>
+{
+	const hasValueBinding = allBindingsAccessor.has('value');
+	const valueBindingKey = getValueBindingKey(element, hasValueBinding);
+	let value = allBindingsAccessor.get(valueBindingKey);
+
+	if(typeof value === 'undefined')
+	{
+		value = ko.observable('');
+		ko.bindingHandlers[value].init(element, () => value, allBindingsAccessor, viewModel, bindingContext);
+	}
+	else
+	{
+		if(!ko.isWritableObservable(value))
+		{
+			throw new Error(`knockout-validator does not work on elements that have a "${valueBindingKey}" binding with a 
+value that is not a writable observable.`);
+		}
+	}
+
+	return value;
+};
+
 export default (
-	isUpdate:boolean, bindingName:string,
+	isInit:boolean, bindingName:string,
 	element: any, valueAccessor: () => any, allBindingsAccessor: ko.AllBindingsAccessor, viewModel: any, bindingContext: ko.BindingContext<any>
 ):ko.BindingHandlerControlsDescendant|void =>
 {
 	let id = getElementId(element);
 
-	if(!isUpdate)
+	if(isInit)
 	{
 		if(!id)
 		{
@@ -72,8 +133,14 @@ export default (
 			if(bindingValues['validationName'])
 			{
 				const field = createField(id);
+				const value = createValueBinding(element, allBindingsAccessor, viewModel, bindingContext);
+				field.value = value;
+				Object.keys(bindingValues).forEach(bindingName =>
+				{
+					const bindingDescriptor:BindingDescriptor = bindingValues[bindingName];
+					field[bindingDescriptor.binding.validatorFieldProp] = ko.unwrap(bindingDescriptor.value);
+				});
 			}
 		}
 	}
-
 }

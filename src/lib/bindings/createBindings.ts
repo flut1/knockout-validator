@@ -3,8 +3,8 @@ import genericBindingHandler from './genericBindingHandler';
 import {bindings, SHORTHAND_BINDING_NAME} from "../const/bindings";
 
 const getBindingHandlers:ko.BindingHandler = name => ({
-	init : () => genericBindingHandler(false, name, ...arguments),
-	update : () => genericBindingHandler(true, name, ...arguments)
+	init : () => genericBindingHandler(true, name, ...arguments),
+	update : () => genericBindingHandler(false, name, ...arguments)
 });
 
 const createBindings = (target:Object):void =>
