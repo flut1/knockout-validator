@@ -26,9 +26,9 @@ describe('parseBindingRule', () =>
 		{
 			expect(rule.type).to.equal(ValidationRuleType.CHECKED);
 		});
-		it('should return a rule with value "true"', () =>
+		it('should return a rule with value "false"', () =>
 		{
-			expect(rule.value).to.equal(false);
+			expect(rule.value).to.equal(true);
 		});
 	});
 	describe('with a number argument', () =>
@@ -123,22 +123,22 @@ describe('parseBindingRule', () =>
 			expect(rule.value[2].name).to.be.oneOf(['a', 'b', 'c']);
 		});
 
-		// it('should return the correct types for parsed subrule "a"', () =>
-		// {
-		// 	const ruleA:IValidationRule = rule.value.find((subRule:IValidationRule) => (subRule.name === 'a'));
-		// 	expect(ruleA.type).to.equal(ValidationRuleType.FUNCTION);
-		// });
-		//
-		// it('should return the correct types for parsed subrule "b"', () =>
-		// {
-		// 	const ruleB:IValidationRule = rule.value.find((subRule:IValidationRule) => (subRule.name === 'b'));
-		// 	expect(ruleB.type).to.equal(ValidationRuleType.REGEX);
-		// });
-		//
-		// it('should return the correct types for parsed subrule "c"', () =>
-		// {
-		// 	const ruleC:IValidationRule = rule.value.find((subRule:IValidationRule) => (subRule.name === 'c'));
-		// 	expect(ruleC.type).to.equal(ValidationRuleType.REGEX);
-		// });
+		it('should return the correct types for parsed subrule "a"', () =>
+		{
+			const ruleA:IValidationRule = rule.value.find((subRule:IValidationRule) => (subRule.name === 'a'));
+			expect(ruleA.type).to.equal(ValidationRuleType.FUNCTION);
+		});
+
+		it('should return the correct types for parsed subrule "b"', () =>
+		{
+			const ruleB:IValidationRule = rule.value.find((subRule:IValidationRule) => (subRule.name === 'b'));
+			expect(ruleB.type).to.equal(ValidationRuleType.REGEX);
+		});
+
+		it('should return the correct types for parsed subrule "c"', () =>
+		{
+			const ruleC:IValidationRule = rule.value.find((subRule:IValidationRule) => (subRule.name === 'c'));
+			expect(ruleC.type).to.equal(ValidationRuleType.REGEX);
+		});
 	});
 });

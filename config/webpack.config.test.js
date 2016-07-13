@@ -8,7 +8,6 @@ module.exports = function()
 		resolve: {
 			extensions: ['', '.ts', '.js']
 		},
-		entry: './test/index.ts',
 		verbose: true,
 		module: {
 			loaders: [

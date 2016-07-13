@@ -1,3 +1,5 @@
+import 'mdn-polyfills/dist/Array.find';
+
 // require all test files
 const testsContext = require.context(
 	'./',
