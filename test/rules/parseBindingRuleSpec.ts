@@ -28,7 +28,7 @@ describe('parseBindingRule', () =>
 		});
 		it('should return a rule with value "false"', () =>
 		{
-			expect(rule.value).to.equal(true);
+			expect(rule.value).to.equal(false);
 		});
 	});
 	describe('with a number argument', () =>

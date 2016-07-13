@@ -3,7 +3,6 @@ var path = require('path');
 module.exports = function (config)
 {
 	config.set({
-		basePath: '../',
 		frameworks: ['source-map-support', 'mocha', 'chai'],
 		files: [
 			'./test/index.ts'
@@ -19,7 +18,7 @@ module.exports = function (config)
 				'webpack'
 			]
 		},
-		webpack: require('./webpack.config.test')(),
+		webpack: require('./config/webpack.config.test')(),
 		webpackServer: { noInfo: true },
 		reporters: ['progress', 'coverage', 'karma-remap-istanbul'],
 		coverageReporter: {
