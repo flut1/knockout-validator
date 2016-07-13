@@ -1,19 +1,15 @@
 /*eslint-disable */
-var webpack = require('webpack');
 var path = require('path');
 
 module.exports = function()
 {
 	return {
+		devtool: 'inline-source-map',
 		resolve: {
 			extensions: ['', '.ts', '.js']
 		},
-		entry: [
-			'./src/index.ts'
-		],
-		output: {
-			library: "KnockoutValidator"
-		},
+		entry: './test/index.ts',
+		verbose: true,
 		module: {
 			loaders: [
 				{
@@ -21,14 +17,21 @@ module.exports = function()
 					exclude: /node_modules/,
 					loader: 'awesome-typescript-loader',
 					query: {
-						tsconfig: 'config/tsconfig.webpack.json'
+						tsconfig: 'config/tsconfig.test.json'
 					}
 				}
+			],
+			postLoaders: [
+				{
+					test: /\.ts$/,
+					loader: 'istanbul-instrumenter-loader',
+					exclude: [
+						/node_modules/,
+						/test/,
+						/Spec\.ts$/
+					]
+				}
 			]
-		},
-		plugins: [],
-		stats: {
-			colors: true
 		}
 	};
 };

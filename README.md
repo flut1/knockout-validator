@@ -1,6 +1,6 @@
-[![Travis](https://img.shields.io/travis/mediamonks/knockout-validator.svg?maxAge=2592000)](https://travis-ci.org/mediamonks/knockout-validator)
-[![Code Climate](https://img.shields.io/codeclimate/github/mediamonks/knockout-validator.svg?maxAge=2592000)](https://codeclimate.com/github/mediamonks/knockout-validator)
-[![Coveralls](https://img.shields.io/coveralls/mediamonks/knockout-validator.svg?maxAge=2592000)](https://coveralls.io/github/mediamonks/knockout-validator?branch=master)
+[![Travis](https://img.shields.io/travis/flut1/knockout-validator.svg?maxAge=2592000)](https://travis-ci.org/flut1/knockout-validator)
+[![Code Climate](https://img.shields.io/codeclimate/github/flut1/knockout-validator.svg?maxAge=2592000)](https://codeclimate.com/github/flut1/knockout-validator)
+[![Coveralls](https://img.shields.io/coveralls/flut1/knockout-validator.svg?maxAge=2592000)](https://coveralls.io/github/flut1/knockout-validator?branch=master)
 [![npm](https://img.shields.io/npm/v/knockout-validator.svg?maxAge=2592000)](https://www.npmjs.com/package/knockout-validator)
 [![npm](https://img.shields.io/npm/dm/knockout-validator.svg?maxAge=2592000)](https://www.npmjs.com/package/knockout-validator)
 
@@ -24,7 +24,7 @@ the browser yourself, and grab one of the following files from the
 `/dist/` folder:
 
 ```sh
-git clone git@github.com:mediamonks/knockout-validator.git
+git clone git@github.com:flut1/knockout-validator.git
 cd knockout-validator
 npm i
 npm run build-dist
@@ -49,7 +49,7 @@ import KnockoutValidator from 'knockout-validator';
 
 ## Documentation
 
-View the [generated documentation](https://rawgit.com/mediamonks/knockout-validator/master/doc/typedoc/index.html).
+View the [generated documentation](https://rawgit.com/flut1/knockout-validator/master/doc/typedoc/index.html).
 
 
 ## Building
@@ -59,7 +59,7 @@ and [Node.js](http://nodejs.org/) installed.
 
 Clone a copy of the repo:
 ```sh
-git clone https://github.com/mediamonks/knockout-validator.git
+git clone https://github.com/flut1/knockout-validator.git
 ```
 
 Change to the knockout-validator directory:
@@ -104,6 +104,6 @@ View [AUTHORS.md](./AUTHORS.md)
 
 ## LICENSE
 
-[MIT](./LICENSE) © MediaMonks
+[MIT](./LICENSE) © Floris Bernard
 
 

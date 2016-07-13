@@ -10,11 +10,11 @@ var baseConfig = require('../config/webpack.config');
 
 var umd = baseConfig();
 umd.output.libraryTarget = "umd";
-umd.output.filename = "./dist/umd/knockout-validator.js";
+umd.output.filename = "./dist/knockout-validator-umd.js";
 
 var umdMin = baseConfig();
 umdMin.output.libraryTarget = "umd";
-umdMin.output.filename = "./dist/umd/knockout-validator.min.js";
+umdMin.output.filename = "./dist/knockout-validator-umd.min.js";
 umdMin.plugins = umdMin.plugins.concat(
 	uglifyPluginSetting
 );
@@ -23,37 +23,29 @@ umdMin.plugins = umdMin.plugins.concat(
 var amd = baseConfig();
 delete amd.output.library;
 amd.output.libraryTarget = "amd";
-amd.output.filename = "./dist/amd/knockout-validator.js";
-
-var amdMin = baseConfig();
-delete amdMin.output.library;
-amdMin.output.libraryTarget = "amd";
-amdMin.output.filename = "./dist/amd/knockout-validator.min.js";
-amdMin.plugins = amdMin.plugins.concat(
-	uglifyPluginSetting
-);
+amd.output.filename = "./dist/knockout-validator-amd.js";
 
 
 var cjs2 = baseConfig();
 delete cjs2.output.library;
 cjs2.output.libraryTarget = "commonjs2";
-cjs2.output.filename = "./dist/commonjs2/knockout-validator.js";
+cjs2.output.filename = "./dist/knockout-validator-commonjs.js";
 
 
 var browser = baseConfig();
 browser.output.libraryTarget = "var";
-browser.output.filename = "./dist/browser/knockout-validator.js";
+browser.output.filename = "./dist/knockout-validator.js";
 
 
 var browserMin = baseConfig();
 browserMin.output.libraryTarget = "var";
-browserMin.output.filename = "./dist/browser/knockout-validator.min.js";
+browserMin.output.filename = "./dist/knockout-validator.min.js";
 browserMin.plugins = browserMin.plugins.concat(
 	uglifyPluginSetting
 );
 
 
-[umd, umdMin, amd, amdMin, cjs2, browser, browserMin].forEach(function(config)
+[umd, umdMin, amd, cjs2, browser, browserMin].forEach(function(config)
 {
 	// returns a Compiler instance
 	webpack(config, function (err, stats)
