@@ -7,10 +7,11 @@
 		"removeComments": false,
 		"preserveConstEnums": true,
 		"sourceMap": false,
+    "allowSyntheticDefaultImports": true,
 		"experimentalDecorators": true
 	},
   "files": [
     "../typings/index.d.ts",
-    "./ExampleSpec.ts"
+    "./rules/parseBindingRuleSpec.ts"
   ]
 }

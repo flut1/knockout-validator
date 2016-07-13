@@ -1,5 +1,5 @@
 import Disposable from 'seng-disposable';
-import ko from 'knockout';
+import ko = require('knockout');
 import ClassnameOptions  from './options/Classnames';
 
 export default class KnockoutValidator extends Disposable {

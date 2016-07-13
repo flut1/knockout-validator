@@ -1,4 +1,4 @@
-import ko from 'knockout';
+import ko = require('knockout');
 import IFieldState from "../fields/IFieldState";
 
 /**
@@ -7,11 +7,11 @@ import IFieldState from "../fields/IFieldState";
  * fields that do not exist yet.
  */
 const fieldStatePlaceholder:IFieldState = {
-	isValid: ko.computed<boolean>(() => null),
-	isValidated: ko.computed<boolean>(() => false),
-	isValidating: ko.computed<boolean>(() => false),
-	value: ko.computed<any>(() => null),
-	validatedValue: ko.computed<any>(() => null),
+	isValid: ko.computed<boolean>(():boolean => null),
+	isValidated: ko.computed<boolean>(():boolean => false),
+	isValidating: ko.computed<boolean>(():boolean => false),
+	value: ko.computed<any>(():any => null),
+	validatedValue: ko.computed<any>(():any => null),
 	validate: () =>
 	{
 		console.warn('Called validate() on a non-existing field');

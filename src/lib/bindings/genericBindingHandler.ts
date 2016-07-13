@@ -1,4 +1,4 @@
-import ko from 'knockout';
+import ko = require('knockout');
 import ValidatorFieldBinding from "./ValidatorFieldBinding";
 import {bindings, SHORTHAND_BINDING_NAME} from "../const/bindings";
 import {getElementId, setElementId, createField} from "./elementMapper";
@@ -93,7 +93,7 @@ Use the selectedOptions binding instead.`);
 	return valueBindingKey;
 };
 
-export const createValueBinding = (element:HTMLElement, allBindingsAccessor: ko.AllBindingsAccessor, viewModel:any, bindingContext: ko.BindingContext):ko.Observable<any> =>
+export const createValueBinding = (element:HTMLElement, allBindingsAccessor: ko.AllBindingsAccessor, viewModel:any, bindingContext: ko.BindingContext<any>):ko.Observable<any> =>
 {
 	const hasValueBinding = allBindingsAccessor.has('value');
 	const valueBindingKey = getValueBindingKey(element, hasValueBinding);
@@ -143,4 +143,6 @@ export default (
 			}
 		}
 	}
+
+	return null;
 }

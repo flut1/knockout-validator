@@ -1,6 +1,7 @@
-import ko from 'knockout';
+import ko = require('knockout');
 import KnockoutValidator from "../KnockoutValidator";
-import {BindingRule, parseBindingRule, IValidationRule} from "../rules/rule";
+import {BindingRule, IValidationRule} from "../rules/rule";
+import parseBindingRule from "../rules/parseBindingRule";
 
 export default class Field {
 	public initialized:boolean = false;
