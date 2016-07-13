@@ -1,4 +1,4 @@
-import ko = require('knockout');
+import * as ko from 'knockout';
 import KnockoutValidator from "../KnockoutValidator";
 import {BindingRule, IValidationRule} from "../rules/rule";
 import parseBindingRule from "../rules/parseBindingRule";

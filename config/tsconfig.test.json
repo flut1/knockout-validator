@@ -8,6 +8,7 @@
     "preserveConstEnums": true,
     "noImplicitAny": false,
     "removeComments": false,
+    "allowSyntheticDefaultImports": true,
     "sourceMap": false,
     "inlineSourceMap": true
   },

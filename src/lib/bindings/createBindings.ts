@@ -1,4 +1,4 @@
-import ko = require('knockout');
+import * as ko from 'knockout';
 import genericBindingHandler from './genericBindingHandler';
 import {bindings, SHORTHAND_BINDING_NAME} from "../const/bindings";
 

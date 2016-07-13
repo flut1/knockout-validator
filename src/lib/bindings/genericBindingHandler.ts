@@ -1,4 +1,4 @@
-import ko = require('knockout');
+import * as ko from 'knockout';
 import ValidatorFieldBinding from "./ValidatorFieldBinding";
 import {bindings, SHORTHAND_BINDING_NAME} from "../const/bindings";
 import {getElementId, setElementId, createField} from "./elementMapper";

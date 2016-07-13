@@ -1,4 +1,4 @@
-import ko = require('knockout');
+import * as ko from 'knockout';
 
 interface IRuleState {
 	isValidating:ko.Computed<boolean>;

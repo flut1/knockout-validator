@@ -1,4 +1,4 @@
-import {ValidationRuleType, BindingRule, IValidationRule} from "./rule";
+import {ValidationRuleType, BindingRule, IValidationRule, INamedBindingRules} from "./rule";
 
 const parseBindingRule = (rule:BindingRule, name:string = null):IValidationRule =>
 {
@@ -24,7 +24,7 @@ const parseBindingRule = (rule:BindingRule, name:string = null):IValidationRule 
 			}
 			return {
 				type : (name === '$or') ? ValidationRuleType.COLLECTION_OR : ValidationRuleType.COLLECTION_AND,
-				value : Object.keys(<Object> rule).map(subRuleName => parseBindingRule(rule[subRuleName], subRuleName)),
+				value : Object.keys(<INamedBindingRules> rule).map(subRuleName => parseBindingRule(rule[subRuleName], subRuleName)),
 				name
 			};
 		case 'string':
