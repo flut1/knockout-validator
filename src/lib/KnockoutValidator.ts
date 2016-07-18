@@ -1,6 +1,7 @@
 import Disposable from 'seng-disposable';
 import * as ko from 'knockout';
 import ClassnameOptions  from './options/Classnames';
+import Field from "./fields/Field";
 
 export default class KnockoutValidator extends Disposable {
 	/**
@@ -35,6 +36,15 @@ export default class KnockoutValidator extends Disposable {
 	 */
 	public isValidated:ko.PureComputed<boolean>;
 
+	public detachField(field:Field):void
+	{
+
+	}
+
+	public attachField(field:Field):void
+	{
+
+	}
 
 	public dispose():void
 	{

@@ -65,6 +65,18 @@ export class ElementMapper {
 	{
 		return this._fields[id] || null;
 	};
+
+	/**
+	 * Removes a field with the given id from the internal map of fields
+	 * @param id The id of the field to remove
+	 */
+	removeField = (id:string):void =>
+	{
+		if(!this._fields[id])
+		{
+			throw new Error(`Trying to remove a field with non-existing id "${id}"`);
+		}
+	}
 }
 
 /**

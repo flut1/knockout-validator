@@ -2,6 +2,7 @@ import * as ko from 'knockout';
 import ValidatorFieldBinding from "./ValidatorFieldBinding";
 import {bindings, SHORTHAND_BINDING_NAME} from "../const/bindings";
 import elementMapper from "./elementMapper";
+import find from 'lodash.find';
 
 type BindingDescriptor = {
 	value : any,
@@ -117,6 +118,45 @@ value that is not a writable observable.`);
 	return value;
 };
 
+const initField = (
+	element: any, id:string, bindingValues:{[name:string]:BindingDescriptor},
+	allBindingsAccessor: ko.AllBindingsAccessor, viewModel: any, bindingContext: ko.BindingContext<any>
+):ko.BindingHandlerControlsDescendant|void =>
+{
+	const field = elementMapper.createField(id);
+	const value = createValueBinding(element, allBindingsAccessor, viewModel, bindingContext);
+	const addToContext:Array<any> = [];
+	field.value = value;
+	Object.keys(bindingValues).forEach(bindingName =>
+	{
+		const bindingDescriptor:BindingDescriptor = bindingValues[bindingName];
+		field[bindingDescriptor.binding.validatorFieldProp] = ko.unwrap(bindingDescriptor.value);
+		if(bindingDescriptor.binding.inheritFromContextProp)
+		{
+			addToContext.push(bindingDescriptor);
+		}
+	});
+
+	ko.utils.domNodeDisposal.addDisposeCallback(element, function()
+	{
+		field.dispose();
+	});
+
+	if(addToContext.length)
+	{
+		const innerBindingContext = bindingContext.extend(addToContext.reduce(
+			function(context:any, bindingDescriptor:BindingDescriptor)
+			{
+				context[bindingDescriptor.binding.inheritFromContextProp] = bindingDescriptor.value;
+			}, {})
+		);
+		ko.applyBindingsToDescendants(innerBindingContext, element);
+		return {controlsDescendantBindings : true};
+	}
+
+	return null;
+};
+
 export default (
 	isInit:boolean, bindingName:string,
 	element: any, valueAccessor: () => any, allBindingsAccessor: ko.AllBindingsAccessor, viewModel: any, bindingContext: ko.BindingContext<any>
@@ -129,18 +169,47 @@ export default (
 		if(!id)
 		{
 			id = elementMapper.setElementId(element);
-			const bindingValues = getAllBindingValues(element, allBindingsAccessor, bindingContext);
 
-			if(bindingValues['validationName'])
+			if(!elementMapper.getField(id))
 			{
-				const field = elementMapper.createField(id);
-				const value = createValueBinding(element, allBindingsAccessor, viewModel, bindingContext);
-				field.value = value;
-				Object.keys(bindingValues).forEach(bindingName =>
+				const bindingValues = getAllBindingValues(element, allBindingsAccessor, bindingContext);
+
+				if(bindingValues['validationName'])
 				{
-					const bindingDescriptor:BindingDescriptor = bindingValues[bindingName];
-					field[bindingDescriptor.binding.validatorFieldProp] = ko.unwrap(bindingDescriptor.value);
+					return initField(element, id, bindingValues, allBindingsAccessor, viewModel, bindingContext);
+				}
+			}
+		}
+	}
+	else if(id)
+	{
+		const field = elementMapper.getField(id);
+
+		if(field)
+		{
+			if(bindingName === SHORTHAND_BINDING_NAME)
+			{
+				const shorthandValues = ko.toJS(valueAccessor());
+
+				bindings.forEach(binding =>
+				{
+					if(typeof shorthandValues[binding.bindingShorthand] !== 'undefined')
+					{
+						field[binding.validatorFieldProp] = shorthandValues[binding.bindingShorthand];
+					}
 				});
+			}
+			else
+			{
+				const value = ko.unwrap(valueAccessor());
+				const binding:ValidatorFieldBinding = find(
+					bindings,
+					(b:ValidatorFieldBinding) => b.bindingName === bindingName
+				);
+				if(binding)
+				{
+					field[binding.validatorFieldProp] = value;
+				}
 			}
 		}
 	}
