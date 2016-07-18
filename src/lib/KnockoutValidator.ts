@@ -37,6 +37,13 @@ export default class KnockoutValidator extends Disposable {
 	 */
 	public isValidated:ko.PureComputed<boolean>;
 
+	constructor()
+	{
+		super();
+
+		this._initComputed();
+	}
+
 	/**
 	 * Returns an array of FieldState instances representing the state of each field in the
 	 * validator.
@@ -79,6 +86,68 @@ export default class KnockoutValidator extends Disposable {
 
 	public dispose():void
 	{
+		if(this.isValid)
+		{
+			this.isValid.dispose();
+			this.isValid = null;
+		}
+		if(this.isValidated)
+		{
+			this.isValidated.dispose();
+			this.isValidated = null;
+		}
+		if(this.isValidating)
+		{
+			this.isValidating.dispose();
+			this.isValidating = null;
+		}
 		super.dispose();
+	}
+
+	private _initComputed():void
+	{
+		this.isValid = ko.pureComputed(() =>
+		{
+			const fields = this._fields();
+			let isValid = true;
+			for(let i=0; i<fields.length; i++)
+			{
+				const fieldIsValid = fields[i].state.isValid();
+				if(fieldIsValid === null)
+				{
+					return null;
+				} else if(!fieldIsValid)
+				{
+					isValid = false;
+				}
+			}
+			return isValid;
+		});
+
+		this.isValidated = ko.pureComputed(() =>
+		{
+			const fields = this._fields();
+			for(let i=0; i<fields.length; i++)
+			{
+				if(!fields[i].state.isValidated())
+				{
+					return false;
+				}
+			}
+			return true;
+		});
+
+		this.isValidating = ko.pureComputed(() =>
+		{
+			const fields = this._fields();
+			for(let i=0; i<fields.length; i++)
+			{
+				if(fields[i].state.isValidating())
+				{
+					return true;
+				}
+			}
+			return false;
+		});
 	}
 }

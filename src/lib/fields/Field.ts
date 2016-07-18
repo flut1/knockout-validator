@@ -68,9 +68,21 @@ export default class Field extends Disposable {
 	public dispose():void
 	{
 		this._detachFromValidator();
+		this._disposeState();
 		elementMapper.removeField(this.id);
 
 		super.dispose();
+	}
+
+	private _disposeState():void
+	{
+		if(this.state)
+		{
+			this.state.isValidating.dispose();
+			this.state.isValidated.dispose();
+			this.state.validatedValue.dispose();
+			this.state = null;
+		}
 	}
 
 	private _createState():void
