@@ -3,7 +3,7 @@ import Field from "../fields/Field";
 /**
  * The DOM attribute key used to save an id of a Field
  */
-export const ID_DOM_ATTRIBUTE = 'data-ko-validator-id';
+const ID_DOM_ATTRIBUTE = 'data-ko-validator-id';
 
 /**
  * Util that keeps track of all registered knockout-validator fields in your application.

@@ -1,7 +1,7 @@
 import * as ko from 'knockout';
 import ValidatorFieldBinding from "./ValidatorFieldBinding";
 import {bindings, SHORTHAND_BINDING_NAME} from "../const/bindings";
-import {getElementId, setElementId, createField} from "./elementMapper";
+import elementMapper from "./elementMapper";
 
 type BindingDescriptor = {
 	value : any,
@@ -122,18 +122,18 @@ export default (
 	element: any, valueAccessor: () => any, allBindingsAccessor: ko.AllBindingsAccessor, viewModel: any, bindingContext: ko.BindingContext<any>
 ):ko.BindingHandlerControlsDescendant|void =>
 {
-	let id = getElementId(element);
+	let id = elementMapper.getElementId(element);
 
 	if(isInit)
 	{
 		if(!id)
 		{
-			id = setElementId(element);
+			id = elementMapper.setElementId(element);
 			const bindingValues = getAllBindingValues(element, allBindingsAccessor, bindingContext);
 
 			if(bindingValues['validationName'])
 			{
-				const field = createField(id);
+				const field = elementMapper.createField(id);
 				const value = createValueBinding(element, allBindingsAccessor, viewModel, bindingContext);
 				field.value = value;
 				Object.keys(bindingValues).forEach(bindingName =>

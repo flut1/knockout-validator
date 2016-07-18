@@ -1,7 +1,7 @@
 import * as chai from 'chai';
-import {ElementMapper, ID_DOM_ATTRIBUTE} from "../../src/lib/bindings/elementMapper";
+import {ElementMapper} from "../../src/lib/bindings/elementMapper";
 import Field from "../../src/lib/fields/Field";
-const Set = require('es6-set');
+const Set:any = require('es6-set');
 const {expect} = chai;
 
 describe('ElementMapper', () =>
