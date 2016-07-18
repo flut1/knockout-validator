@@ -10,7 +10,8 @@ const ID_DOM_ATTRIBUTE = 'data-ko-validator-id';
  * Only the exported elementMapper singleton instance should be used, this class is exported
  * for testing purposes.
  */
-export class ElementMapper {
+export class ElementMapper
+{
 	/**
 	 * Counter to assign unique ids to each validator
 	 */
@@ -20,7 +21,7 @@ export class ElementMapper {
 	 * Static map of each field by id. Is used to lookup fields based on the id saved
 	 * on the corresponding HTML element.
 	 */
-	private _fields:{[id:string] : Field} = {};
+	private _fields:{[id:string]:Field} = {};
 
 	/**
 	 * Generates a new id for an HTML element and sets it as an attribute on the element

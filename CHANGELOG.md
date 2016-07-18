@@ -68,6 +68,9 @@ function validatePassword(password:string):string|boolean
 ```
 You could then read the errors from the _errors_ observable on a field. This approach was not very flexible as you could only return 1 error and it was difficult to apply localization on the error messages. **In knockout-validator v1.0.0, a string return value is interpreted as _true_**. This problem should now be solved with _named rules_ (see above).
 
+### validate() always returns a Promise
+The validate() method now always returns a Promise, even if there are no asynchronous rules attached to the validator's fields. Besides having a more consistent return value this allows the validator to make use of Knockout's [deferred updates](http://knockoutjs.com/documentation/deferred-updates.html) for better performance.
+
 ### Validation state
  - The _isValid_ observable on the validator has been changed to a read-only computed value.
  - The _errors_ property of fields has been removed in favor of named validation rules
@@ -78,3 +81,5 @@ You could then read the errors from the _errors_ observable on a field. This app
  - The static _ATTRIBUTE_NAMESPACE_ property has been removed
  - The _asyncTimeout_ is now called _asyncValidationTimeout_.
 
+### Requires Knockout 3.4.0 or up
+Requires version 3.4.0 or newer because it uses Knockout's [deferred updates](http://knockoutjs.com/documentation/deferred-updates.html) and [pure computed](http://knockoutjs.com/documentation/computed-pure.html) 

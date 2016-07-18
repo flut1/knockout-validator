@@ -3,8 +3,12 @@ import * as ko from 'knockout';
 import ClassnameOptions  from './options/Classnames';
 import Field from "./fields/Field";
 import FieldState from "./fields/FieldState";
+import createBindings from "./bindings/createBindings";
 
-export default class KnockoutValidator extends Disposable {
+createBindings(ko.bindingHandlers);
+
+export default class KnockoutValidator extends Disposable
+{
 	/**
 	 * Object containing the classnames that the validator will apply on HTML elements based on validation state.
 	 * These may be changed if different classnames are desired.
@@ -37,13 +41,6 @@ export default class KnockoutValidator extends Disposable {
 	 */
 	public isValidated:ko.PureComputed<boolean>;
 
-	constructor()
-	{
-		super();
-
-		this._initComputed();
-	}
-
 	/**
 	 * Returns an array of FieldState instances representing the state of each field in the
 	 * validator.
@@ -58,6 +55,35 @@ export default class KnockoutValidator extends Disposable {
 	 * exposed through the public [[fields]] property.
 	 */
 	private _fields:ko.ObservableArray<Field> = ko.observableArray([]);
+
+	constructor()
+	{
+		super();
+
+		this._initComputed();
+	}
+
+	public validate():Promise<boolean>
+	{
+		const fields = this._fields();
+		fields.forEach(field => field.state.isValid(null));
+
+		return Promise.all(fields.map(field => field.validate())).then((results:Array<boolean>) =>
+		{
+			let isValid = true;
+			for(let i = 0; isValid && i < results.length; i++)
+			{
+				if(!results[i])
+				{
+					isValid = false;
+				}
+			}
+			return new Promise((resolve:(result:boolean) => void) =>
+			{
+				ko.tasks.schedule(() => resolve(isValid));
+			});
+		});
+	}
 
 	/**
 	 * Unregisters a field with this validator instance
@@ -84,6 +110,30 @@ export default class KnockoutValidator extends Disposable {
 		}
 	}
 
+	/**
+	 * Returns a map of the values of all fields attached to this validator by name.
+	 * @param validatedOnly If true, will only include the validated fields in the returned
+	 * map.
+	 */
+	public getValues(validatedOnly:boolean = false):{[name:string]:any}
+	{
+		let fields = this._fields();
+		if(validatedOnly)
+		{
+			fields = fields.filter(field => field.state.isValidated());
+		}
+		return fields.reduce((values:{[name:string]:any}, field:Field) =>
+		{
+			values[field.name] = field.state.value();
+			return values;
+		}, {});
+	}
+
+	/**
+	 * Clears the computed values and subscriptions of this validator for garbage collection.
+	 * This method should always be called when the validator is no longer used to prevent
+	 * memory leaks.
+	 */
 	public dispose():void
 	{
 		if(this.isValid)
@@ -110,24 +160,25 @@ export default class KnockoutValidator extends Disposable {
 		{
 			const fields = this._fields();
 			let isValid = true;
-			for(let i=0; i<fields.length; i++)
+			for(let i = 0; i < fields.length; i++)
 			{
 				const fieldIsValid = fields[i].state.isValid();
 				if(fieldIsValid === null)
 				{
 					return null;
-				} else if(!fieldIsValid)
+				}
+				else if(!fieldIsValid)
 				{
 					isValid = false;
 				}
 			}
 			return isValid;
-		});
+		}).extend({deferred: true});
 
 		this.isValidated = ko.pureComputed(() =>
 		{
 			const fields = this._fields();
-			for(let i=0; i<fields.length; i++)
+			for(let i = 0; i < fields.length; i++)
 			{
 				if(!fields[i].state.isValidated())
 				{
@@ -135,19 +186,19 @@ export default class KnockoutValidator extends Disposable {
 				}
 			}
 			return true;
-		});
+		}).extend({deferred: true});
 
 		this.isValidating = ko.pureComputed(() =>
 		{
 			const fields = this._fields();
-			for(let i=0; i<fields.length; i++)
+			for(let i = 0; i < fields.length; i++)
 			{
-				if(fields[i].state.isValidating())
+				if(!fields[i].state.isValidating())
 				{
 					return true;
 				}
 			}
 			return false;
-		});
+		}).extend({deferred: true});
 	}
 }

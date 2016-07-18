@@ -3,9 +3,9 @@ import genericBindingHandler from './genericBindingHandler';
 import {bindings, SHORTHAND_BINDING_NAME} from "../const/bindings";
 
 const getBindingHandlers = (name:string):ko.BindingHandler => ({
-	init : (element: any, valueAccessor: () => any, allBindingsAccessor: ko.AllBindingsAccessor, viewModel: any, bindingContext: ko.BindingContext<any>) =>
+	init: (element:any, valueAccessor:() => any, allBindingsAccessor:ko.AllBindingsAccessor, viewModel:any, bindingContext:ko.BindingContext<any>) =>
 		genericBindingHandler(true, name, element, valueAccessor, allBindingsAccessor, viewModel, bindingContext),
-	update : (element: any, valueAccessor: () => any, allBindingsAccessor: ko.AllBindingsAccessor, viewModel: any, bindingContext: ko.BindingContext<any>) =>
+	update: (element:any, valueAccessor:() => any, allBindingsAccessor:ko.AllBindingsAccessor, viewModel:any, bindingContext:ko.BindingContext<any>) =>
 		genericBindingHandler(false, name, element, valueAccessor, allBindingsAccessor, viewModel, bindingContext),
 });
 

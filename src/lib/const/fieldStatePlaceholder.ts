@@ -11,11 +11,11 @@ const fieldStatePlaceholder:FieldState = new FieldState(
 	() =>
 	{
 		console.warn('Called validate() on a non-existing field');
-		return false;
+		return Promise.resolve(false);
 	},
 	(name:string) => fieldStatePlaceholder,
 	ko.pureComputed<boolean>(():boolean => false),
-	ko.pureComputed<boolean>(():boolean => null),
+	ko.observable<boolean>(null),
 	ko.pureComputed<boolean>(():boolean => false),
 	ko.observable<any>(null),
 	ko.pureComputed<any>(():any => null)

@@ -5,11 +5,11 @@ import elementMapper from "./elementMapper";
 import find from 'lodash.find';
 
 type BindingDescriptor = {
-	value : any,
-	binding : ValidatorFieldBinding
+	value:any,
+	binding:ValidatorFieldBinding
 };
 
-const getAllBindingValues = (element:HTMLElement, allBindingsAccessor: ko.AllBindingsAccessor, bindingContext: ko.BindingContext<any>):{[name:string]:BindingDescriptor} =>
+const getAllBindingValues = (element:HTMLElement, allBindingsAccessor:ko.AllBindingsAccessor, bindingContext:ko.BindingContext<any>):{[name:string]:BindingDescriptor} =>
 {
 	const shorthandValues = allBindingsAccessor.get(SHORTHAND_BINDING_NAME) || {};
 	const allBindings:{[name:string]:BindingDescriptor} = {};
@@ -20,33 +20,34 @@ const getAllBindingValues = (element:HTMLElement, allBindingsAccessor: ko.AllBin
 		See the API docs for '${SHORTHAND_BINDING_NAME}' for more information.`);
 	}
 
-	bindings.forEach(binding => {
+	bindings.forEach(binding =>
+	{
 		const bindingValue = allBindingsAccessor.get(binding.bindingName);
 		if(bindingValue)
 		{
 			allBindings[binding.bindingName] = {
-				value : bindingValue,
+				value: bindingValue,
 				binding
 			};
 		}
 		else if(shorthandValues[binding.bindingShorthand])
 		{
 			allBindings[binding.bindingName] = {
-				value : shorthandValues[binding.bindingShorthand],
+				value: shorthandValues[binding.bindingShorthand],
 				binding
 			};
 		}
 		else if(binding.inheritFromContextProp && bindingContext[binding.inheritFromContextProp])
 		{
 			allBindings[binding.bindingName] = {
-				value : bindingContext[binding.inheritFromContextProp],
+				value: bindingContext[binding.inheritFromContextProp],
 				binding
 			};
 		}
 		else if(binding.inheritFromAttribute && element.hasAttribute(binding.inheritFromAttribute))
 		{
 			allBindings[binding.bindingName] = {
-				value : element.getAttribute(binding.inheritFromAttribute),
+				value: element.getAttribute(binding.inheritFromAttribute),
 				binding
 			};
 		}
@@ -83,13 +84,13 @@ export const getValueBindingKey = (element:HTMLElement):string =>
 	}
 	else if(tagName !== 'textarea')
 	{
-		throw new Error(`Cannot apply validation bindings to unsupported <${tagName}> element.`)
+		throw new Error(`Cannot apply validation bindings to unsupported <${tagName}> element.`);
 	}
 
 	return valueBindingKey;
 };
 
-export const createValueBinding = (element:HTMLElement, allBindingsAccessor: ko.AllBindingsAccessor, viewModel:any, bindingContext: ko.BindingContext<any>):ko.Observable<any> =>
+export const createValueBinding = (element:HTMLElement, allBindingsAccessor:ko.AllBindingsAccessor, viewModel:any, bindingContext:ko.BindingContext<any>):ko.Observable<any> =>
 {
 	const hasValueBinding = allBindingsAccessor.has('value');
 	const valueBindingKey = getValueBindingKey(element);
@@ -118,10 +119,8 @@ value that is not a writable observable.`);
 	return value;
 };
 
-const initField = (
-	element: any, id:string, bindingValues:{[name:string]:BindingDescriptor},
-	allBindingsAccessor: ko.AllBindingsAccessor, viewModel: any, bindingContext: ko.BindingContext<any>
-):ko.BindingHandlerControlsDescendant|void =>
+const initField = (element:any, id:string, bindingValues:{[name:string]:BindingDescriptor},
+                   allBindingsAccessor:ko.AllBindingsAccessor, viewModel:any, bindingContext:ko.BindingContext<any>):ko.BindingHandlerControlsDescendant|void =>
 {
 	const field = elementMapper.createField(id);
 	const value = createValueBinding(element, allBindingsAccessor, viewModel, bindingContext);
@@ -151,16 +150,14 @@ const initField = (
 			}, {})
 		);
 		ko.applyBindingsToDescendants(innerBindingContext, element);
-		return {controlsDescendantBindings : true};
+		return {controlsDescendantBindings: true};
 	}
 
 	return null;
 };
 
-export default (
-	isInit:boolean, bindingName:string,
-	element: any, valueAccessor: () => any, allBindingsAccessor: ko.AllBindingsAccessor, viewModel: any, bindingContext: ko.BindingContext<any>
-):ko.BindingHandlerControlsDescendant|void =>
+export default (isInit:boolean, bindingName:string,
+                element:any, valueAccessor:() => any, allBindingsAccessor:ko.AllBindingsAccessor, viewModel:any, bindingContext:ko.BindingContext<any>):ko.BindingHandlerControlsDescendant|void =>
 {
 	let id = elementMapper.getElementId(element);
 
@@ -215,4 +212,4 @@ export default (
 	}
 
 	return null;
-}
+};

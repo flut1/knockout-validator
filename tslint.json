@@ -11,11 +11,6 @@
     "jsdoc-format": false,
     "label-position": true,
     "label-undefined": true,
-    "member-ordering": [true,
-      "public-before-private",
-      "static-before-instance",
-      "variables-before-functions"
-    ],
     "no-any": false,
     "no-arg": true,
     "no-bitwise": false,

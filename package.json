@@ -80,9 +80,10 @@
   },
   "dependencies": {
     "lodash.find": "^4.4.0",
+    "qs": "^6.2.0",
     "seng-disposable": "^1.0.1"
   },
   "peerDependencies": {
-    "knockout": ">= 3.3.0 < 4"
+    "knockout": ">= 3.4.0 < 4"
   }
 }

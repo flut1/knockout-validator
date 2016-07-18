@@ -1,4 +1,5 @@
-export default class KnockoutValidatorClassnames {
+export default class KnockoutValidatorClassnames
+{
 	/**
 	 * Classname that will be added to HTML elements that have been validated as valid. If null,
 	 * no class will be added.

@@ -1,4 +1,4 @@
-import {MaybePromise} from "../util/promiseUtils";
+export type MaybePromise<T> = Promise<T>|T;
 
 export enum ValidationRuleType {
 	COLLECTION_AND,
@@ -8,7 +8,8 @@ export enum ValidationRuleType {
 	FUNCTION
 }
 
-export interface IValidationRule {
+export interface IValidationRule
+{
 	type:ValidationRuleType;
 	value:any;
 	name:string;

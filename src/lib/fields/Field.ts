@@ -5,8 +5,10 @@ import parseBindingRule from "../rules/parseBindingRule";
 import Disposable from "seng-disposable";
 import elementMapper from "../bindings/elementMapper";
 import FieldState from "./FieldState";
+import RuleState from "../rules/RuleState";
 
-export default class Field extends Disposable {
+export default class Field extends Disposable
+{
 	public value:ko.Observable<any>;
 	public state:FieldState;
 	private _validator:KnockoutValidator;
@@ -15,22 +17,31 @@ export default class Field extends Disposable {
 	private _isValidating:ko.Observable<boolean> = ko.observable(false);
 	private _validatedValue:ko.Observable<any> = ko.observable(null);
 
-	constructor(
-		public id:string
-	)
+	constructor(public id:string)
 	{
+		super();
 		this._createState();
 	}
 
-	public validate = ():boolean =>
+	public validate = ():Promise<boolean> =>
 	{
-		return true;
+		return null;
 	};
 
-	public getRuleState = (ruleName:string) =>
+	public getRuleState = (ruleName:string):RuleState =>
 	{
-
+		return null;
 	};
+
+	public get name():string
+	{
+		return this.state.name;
+	}
+
+	public set name(name:string)
+	{
+		this.state.name = name;
+	}
 
 	public get rule():BindingRule
 	{
