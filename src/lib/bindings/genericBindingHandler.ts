@@ -55,7 +55,7 @@ const getAllBindingValues = (element:HTMLElement, allBindingsAccessor: ko.AllBin
 	return allBindings;
 };
 
-export const getValueBindingKey = (element:HTMLElement, hasValueBinding:boolean):string =>
+export const getValueBindingKey = (element:HTMLElement):string =>
 {
 	const tagName = element.tagName.toLowerCase();
 	const typeAttr = element.getAttribute('type');
@@ -77,11 +77,6 @@ export const getValueBindingKey = (element:HTMLElement, hasValueBinding:boolean)
 	{
 		if(element.hasAttribute('multiple'))
 		{
-			if(hasValueBinding)
-			{
-				throw new Error(`Please do not use the value bindings with a multiple-option select element.
-Use the selectedOptions binding instead.`);
-			}
 			valueBindingKey = 'selectedOptions';
 		}
 	}
@@ -96,7 +91,13 @@ Use the selectedOptions binding instead.`);
 export const createValueBinding = (element:HTMLElement, allBindingsAccessor: ko.AllBindingsAccessor, viewModel:any, bindingContext: ko.BindingContext<any>):ko.Observable<any> =>
 {
 	const hasValueBinding = allBindingsAccessor.has('value');
-	const valueBindingKey = getValueBindingKey(element, hasValueBinding);
+	const valueBindingKey = getValueBindingKey(element);
+	if(valueBindingKey == 'selectedOptions' && hasValueBinding)
+	{
+		throw new Error(`Please do not use the value bindings with a multiple-option select element.
+Use the selectedOptions binding instead.`);
+	}
+
 	let value = allBindingsAccessor.get(valueBindingKey);
 
 	if(typeof value === 'undefined')

@@ -1,4 +1,7 @@
 import 'mdn-polyfills/dist/Array.find';
+import * as chai from 'chai';
+import * as chaiAsPromised from 'chai-as-promised';
+chai.use(chaiAsPromised);
 
 // require all test files
 const testsContext = require.context(

@@ -1,9 +1,7 @@
 import * as chai from 'chai';
-import * as chaiAsPromised from 'chai-as-promised';
 import parseBindingRule from '../../src/lib/rules/parseBindingRule';
 import {ValidationRuleType, IValidationRule} from "../../src/lib/rules/rule";
 const {expect} = chai;
-chai.use(chaiAsPromised);
 
 describe('parseBindingRule', () =>
 {

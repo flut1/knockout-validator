@@ -5,7 +5,6 @@ const parseBindingRule = (rule:BindingRule, name:string = null):IValidationRule 
 	switch(typeof rule)
 	{
 		case 'object':
-			// todo: check for polyfill
 			if(Array.isArray(rule))
 			{
 				return {
