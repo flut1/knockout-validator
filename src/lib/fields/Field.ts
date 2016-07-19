@@ -1,11 +1,13 @@
 import * as ko from 'knockout';
 import KnockoutValidator from "../KnockoutValidator";
-import {BindingRule, IValidationRule} from "../rules/rule";
+import {BindingRule, IValidationRule, ValidationRuleType} from "../rules/rule";
 import parseBindingRule from "../rules/parseBindingRule";
 import Disposable from "seng-disposable";
 import elementMapper from "../bindings/elementMapper";
 import FieldState from "./FieldState";
 import RuleState from "../rules/RuleState";
+import some from 'lodash.some';
+import every from 'lodash.every';
 
 export default class Field extends Disposable
 {
@@ -25,7 +27,8 @@ export default class Field extends Disposable
 
 	public validate = ():Promise<boolean> =>
 	{
-		return null;
+
+		return this._validateRule(this._parsedRule);
 	};
 
 	public getRuleState = (ruleName:string):RuleState =>
@@ -50,8 +53,11 @@ export default class Field extends Disposable
 
 	public set rule(rule:BindingRule)
 	{
-		this._rule = rule;
-		this._parsedRule = parseBindingRule(rule);
+		if(this._rule !== rule)
+		{
+			this._rule = rule;
+			this._parsedRule = parseBindingRule(rule);
+		}
 	}
 
 	public get validator():KnockoutValidator
@@ -85,6 +91,31 @@ export default class Field extends Disposable
 		super.dispose();
 	}
 
+	private _validateRule(rule:IValidationRule):Promise<boolean>
+	{
+		switch(rule.type)
+		{
+			case ValidationRuleType.CHECKED:
+
+				break;
+			case ValidationRuleType.COLLECTION_OR:
+			case ValidationRuleType.COLLECTION_AND:
+				const subRules = <Array<IValidationRule>> rule.value;
+				const aggregation = rule.type === ValidationRuleType.COLLECTION_OR ? some : every;
+				return Promise.all(subRules.map(rule => this._validateRule(rule))).then(
+					(results:Array<boolean>) => aggregation(results, result => !!result)
+				);
+			case ValidationRuleType.FUNCTION:
+
+				break;
+			case ValidationRuleType.REGEX:
+
+				break;
+			default:
+				throw new Error(`Unknown validation rule type "${rule.type}"`);
+		}
+	}
+
 	private _disposeState():void
 	{
 		if(this.state)
@@ -104,11 +135,11 @@ export default class Field extends Disposable
 			null,
 			this.validate,
 			this.getRuleState,
-			ko.pureComputed(() => this._isValidating()),
-			isValid,
-			ko.pureComputed(() => isValid() !== null),
 			this.value,
-			ko.pureComputed(() => this._validatedValue())
+			ko.pureComputed(() => isValid() !== null),
+			ko.pureComputed(() => this._validatedValue()),
+			ko.pureComputed(() => this._isValidating()),
+			isValid
 		);
 	}
 

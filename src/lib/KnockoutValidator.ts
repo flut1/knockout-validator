@@ -4,6 +4,7 @@ import ClassnameOptions  from './options/Classnames';
 import Field from "./fields/Field";
 import FieldState from "./fields/FieldState";
 import createBindings from "./bindings/createBindings";
+import some from 'lodash.some';
 
 createBindings(ko.bindingHandlers);
 
@@ -175,30 +176,7 @@ export default class KnockoutValidator extends Disposable
 			return isValid;
 		}).extend({deferred: true});
 
-		this.isValidated = ko.pureComputed(() =>
-		{
-			const fields = this._fields();
-			for(let i = 0; i < fields.length; i++)
-			{
-				if(!fields[i].state.isValidated())
-				{
-					return false;
-				}
-			}
-			return true;
-		}).extend({deferred: true});
-
-		this.isValidating = ko.pureComputed(() =>
-		{
-			const fields = this._fields();
-			for(let i = 0; i < fields.length; i++)
-			{
-				if(!fields[i].state.isValidating())
-				{
-					return true;
-				}
-			}
-			return false;
-		}).extend({deferred: true});
+		this.isValidated = ko.pureComputed(() => !some(this._fields(), field => !field.isValidated())).extend({deferred: true});
+		this.isValidating = ko.pureComputed(() => some(this._fields(), field => field.isValidating())).extend({deferred: true});
 	}
 }

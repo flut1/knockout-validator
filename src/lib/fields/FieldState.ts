@@ -6,12 +6,12 @@ export default class FieldState extends RuleState
 	constructor(public name:string,
 	            public validate:() => Promise<boolean>,
 	            public rule:(name:string) => RuleState,
+	            public value:ko.Observable<any>,
+	            public isValidated:ko.PureComputed<boolean>,
+	            public validatedValue:ko.PureComputed<any>,
 	            isValidating:ko.PureComputed<boolean>,
-	            isValid:ko.Observable<boolean>,
-	            isValidated:ko.PureComputed<boolean>,
-	            value:ko.Observable<any>,
-	            validatedValue:ko.PureComputed<any>)
+	            isValid:ko.Observable<boolean>)
 	{
-		super(isValidating, isValid, isValidated, value, validatedValue);
+		super(isValidating, isValid);
 	}
 }
