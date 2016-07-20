@@ -1,9 +1,9 @@
 import * as ko from 'knockout';
 
 interface IValidatable {
-	validate():Promise<boolean>;
+	validate(value?:any):Promise<boolean>;
 	clearValidation():void;
-	isValid:ko.PureComputed<boolean>|ko.Observable<boolean>;
+	isValid:ko.PureComputed<boolean>;
 	isValidated:ko.PureComputed<boolean>;
 	isValidating:ko.PureComputed<boolean>;
 }
