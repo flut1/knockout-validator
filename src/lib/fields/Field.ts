@@ -7,6 +7,7 @@ import IValidatableRule from "../interface/IValidatableRule";
 import RuleType from "../rules/RuleType";
 import {RuleBindingValue} from "../rules/RuleBindingValue";
 import Rule from "../rules/Rule";
+import rulePlaceholder from "../rules/rulePlaceholder";
 
 export default class Field extends Disposable implements IValidatableRule
 {
@@ -90,7 +91,7 @@ export default class Field extends Disposable implements IValidatableRule
 
 	public rule(name?:string|number):Rule
 	{
-		return this._rule();
+		return this._rule() || rulePlaceholder;
 	}
 
 	public get ruleBindingValue():RuleBindingValue

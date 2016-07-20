@@ -6,6 +6,7 @@ import every from 'lodash.every';
 import find from 'lodash.find';
 import Disposable from "seng-disposable";
 import {SingleRuleFunction} from "./RuleBindingValue";
+import rulePlaceholder from "./rulePlaceholder";
 
 export default class Rule extends Disposable implements IValidatableRule {
 	public readonly name:string;
@@ -57,7 +58,7 @@ export default class Rule extends Disposable implements IValidatableRule {
 	{
 		if(this._isCollection)
 		{
-			return typeof name === 'undefined' ? this.test[0] : (find(<Array<Rule>> this.test, rule => rule.name === name) || null);
+			return typeof name === 'undefined' ? this.test[0] : (find(<Array<Rule>> this.test, rule => rule.name === name) || rulePlaceholder);
 		}
 		return null;
 	}
