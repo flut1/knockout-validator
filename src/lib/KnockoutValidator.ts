@@ -5,10 +5,11 @@ import Field from "./fields/Field";
 import FieldState from "./fields/FieldState";
 import createBindings from "./bindings/createBindings";
 import some from 'lodash.some';
+import IValidatable from "./interface/IValidatable";
 
 createBindings(ko.bindingHandlers);
 
-export default class KnockoutValidator extends Disposable
+export default class KnockoutValidator extends Disposable implements IValidatable
 {
 	/**
 	 * Object containing the classnames that the validator will apply on HTML elements based on validation state.
@@ -97,6 +98,11 @@ export default class KnockoutValidator extends Disposable
 		{
 			this._fields.splice(index, 1);
 		}
+	}
+
+	public clearValidation():void
+	{
+
 	}
 
 	/**

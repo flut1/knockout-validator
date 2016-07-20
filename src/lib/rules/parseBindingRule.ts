@@ -1,53 +1,55 @@
-import {ValidationRuleType, BindingRule, IValidationRule, INamedBindingRules} from "./rule";
+import RuleType from "./RuleType";
+import {INamedRuleBindingValue, RuleBindingValue} from "./RuleBindingValue";
+import Rule from "./Rule";
 
 const SPECIAL_KEY_OR:string = '$or';
 
-const parseBindingRule = (rule:BindingRule, name:string = null):IValidationRule =>
+const parseBindingRule = (rule:RuleBindingValue, name:string = null):Rule =>
 {
 	switch(typeof rule)
 	{
 		case 'object':
 			if(Array.isArray(rule))
 			{
-				return {
-					type: (name === SPECIAL_KEY_OR) ? ValidationRuleType.COLLECTION_OR : ValidationRuleType.COLLECTION_AND,
-					value: (<Array<BindingRule>> rule).map(
-						(subRule:BindingRule, index:number) => parseBindingRule(subRule, index.toString())
-					),
-					name
-				};
+				return new Rule(
+					name,
+					(name === SPECIAL_KEY_OR) ? RuleType.COLLECTION_OR : RuleType.COLLECTION_AND,
+					(<Array<RuleBindingValue>> rule).map(
+						(subRule:RuleBindingValue, index:number) => parseBindingRule(subRule, index.toString())
+					)
+				);
 			}
 			if(rule instanceof RegExp)
 			{
-				return {
-					type: ValidationRuleType.REGEX,
-					value: rule,
-					name
-				};
+				return new Rule(
+					name,
+					RuleType.REGEX,
+					rule
+				);
 			}
-			return {
-				type: (name === SPECIAL_KEY_OR) ? ValidationRuleType.COLLECTION_OR : ValidationRuleType.COLLECTION_AND,
-				value: Object.keys(<INamedBindingRules> rule).map(subRuleName => parseBindingRule(rule[subRuleName], subRuleName)),
-				name
-			};
+			return new Rule(
+				name,
+				(name === SPECIAL_KEY_OR) ? RuleType.COLLECTION_OR : RuleType.COLLECTION_AND,
+				Object.keys(<INamedRuleBindingValue> rule).map(subRuleName => parseBindingRule(rule[subRuleName], subRuleName))
+			);
 		case 'string':
-			return {
-				type: ValidationRuleType.REGEX,
-				value: new RegExp(<string> rule),
-				name
-			};
+			return new Rule(
+				name,
+				RuleType.REGEX,
+				new RegExp(<string> rule)
+			);
 		case 'boolean':
-			return {
-				type: ValidationRuleType.CHECKED,
-				value: rule,
-				name
-			};
+			return new Rule(
+				name,
+				RuleType.CHECKED,
+				rule
+			);
 		case 'function':
-			return {
-				type: ValidationRuleType.FUNCTION,
-				value: rule,
-				name
-			};
+			return new Rule(
+				name,
+				RuleType.FUNCTION,
+				rule
+			);
 		default:
 			throw new Error(`validation rule "${rule}" has unsupported type "${typeof rule}"`);
 	}

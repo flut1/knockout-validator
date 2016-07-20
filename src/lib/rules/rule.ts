@@ -1,38 +1,40 @@
-export type MaybePromise<T> = Promise<T>|T;
+import IValidatableRule from "../interface/IValidatableRule";
+import * as ko from 'knockout';
+import RuleType from "./RuleType";
 
-export enum ValidationRuleType {
-	COLLECTION_AND,
-	COLLECTION_OR,
-	REGEX,
-	CHECKED,
-	FUNCTION
-}
+export default class Rule implements IValidatableRule {
+	public readonly name:string;
+	public readonly ruleType:RuleType;
+	public readonly isValid:ko.Observable<boolean> = ko.observable(null);
+	public readonly isValidated:ko.PureComputed<boolean>;
+	public readonly isValidating:ko.PureComputed<boolean>;
+	private _test:any;
 
-export interface IValidationRule
-{
-	type:ValidationRuleType;
-	value:any;
-	name:string;
-}
+	constructor(
+		name:string,
+	    ruleType:RuleType,
+	    test:any
+	)
+	{
+		this.name = name;
+		this.ruleType = ruleType;
+		this._test = test;
 
-export type SingleRuleFunction = (value:any) => MaybePromise<boolean>;
+		this.isValidated = ko.computed(() => this.isValid() !== null).extend({deferred : true});
+		this.isValidating = ko.computed(() => this._isValidating());
+	}
 
-/**
- * Type alias for the type of a single rule in the validationRule binding
- */
-export type SingleBindingRule = RegExp|string|boolean|SingleRuleFunction;
+	rule(name?:string|number):IValidatableRule
+	{
+		return null;
+	}
 
-/**
- * Type alias for all possible values of the validationRule binding
- */
-export type BindingRule = SingleBindingRule|INamedBindingRules|Array<SingleBindingRule|INamedBindingRules>;
+	validate():Promise<boolean>
+	{
+		return null;
+	}
 
-/**
- * Interface for the value of named rule syntax of the validationRule binding. This is a key-value object
- * with the keys being the name for the rule and the values being a BindingRule value.
- */
-export interface INamedBindingRules
-{
-	[name:string]:BindingRule;
-	$some?:INamedBindingRules|Array<SingleBindingRule|INamedBindingRules>;
+	clearValidation():void
+	{
+	}
 }
