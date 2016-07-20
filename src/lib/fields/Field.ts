@@ -21,6 +21,7 @@ export default class Field extends Disposable implements IValidatableRule
 	private _validatedValue:ko.Observable<any> = ko.observable(null).extend({deferred : true});
 	private _validator:KnockoutValidator;
 	private _ruleBindingValue:RuleBindingValue;
+	private _validateOn:string;
 
 	constructor(public id:string)
 	{
@@ -58,6 +59,16 @@ export default class Field extends Disposable implements IValidatableRule
 	{
 		const rule = this._rule();
 		return rule ? rule.ruleType : RuleType.NONE;
+	}
+
+	public get validateOn():string
+	{
+		return this._validateOn;
+	}
+
+	public set validateOn(validateOn:string)
+	{
+		this._validateOn = validateOn;
 	}
 
 	public validate = (value?:any):Promise<boolean> =>
