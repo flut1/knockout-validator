@@ -11,10 +11,10 @@ import rulePlaceholder from "../rules/rulePlaceholder";
 
 export default class Field extends Disposable implements IValidatableRule
 {
-	public readonly isValidated:ko.PureComputed<boolean>;
-	public readonly isValidating:ko.PureComputed<boolean>;
-	public readonly validatedValue:ko.PureComputed<any>;
-	public readonly isValid:ko.PureComputed<boolean>;
+	public /*readonly*/ isValidated:ko.PureComputed<boolean>;
+	public /*readonly*/ isValidating:ko.PureComputed<boolean>;
+	public /*readonly*/ validatedValue:ko.PureComputed<any>;
+	public /*readonly*/ isValid:ko.PureComputed<boolean>;
 	public value:ko.Observable<any>;
 	public name:string;
 

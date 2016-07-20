@@ -9,12 +9,12 @@ import {SingleRuleFunction} from "./RuleBindingValue";
 import rulePlaceholder from "./rulePlaceholder";
 
 export default class Rule extends Disposable implements IValidatableRule {
-	public readonly name:string;
-	public readonly ruleType:RuleType;
-	public readonly isValid:ko.PureComputed<boolean>;
-	public readonly isValidated:ko.PureComputed<boolean>;
-	public readonly isValidating:ko.PureComputed<boolean>;
-	public readonly test:any;
+	public /*readonly*/ name:string;
+	public /*readonly*/ ruleType:RuleType;
+	public /*readonly*/ isValid:ko.PureComputed<boolean>;
+	public /*readonly*/ isValidated:ko.PureComputed<boolean>;
+	public /*readonly*/ isValidating:ko.PureComputed<boolean>;
+	public /*readonly*/ test:any;
 	private _isValid:ko.Observable<boolean>;
 	private _isValidating:ko.Observable<boolean>;
 	private _isCollection:boolean;
