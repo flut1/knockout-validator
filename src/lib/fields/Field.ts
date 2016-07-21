@@ -24,6 +24,7 @@ export default class Field extends Disposable implements IValidatableRule
 	private _ruleBindingValue:RuleBindingValue;
 	private _validateOn:string;
 	private _valueSubscriptions:Array<ko.subscription> = [];
+	private _currentValidation:Promise<boolean> = null;
 
 	constructor(public id:string)
 	{
@@ -92,7 +93,15 @@ export default class Field extends Disposable implements IValidatableRule
 			throw new Error(`Trying to validate field ${name} without a validation rule.`);
 		}
 
-		return rule.validate(typeof value === 'undefined' ? this.value() : value);
+		if(!this._currentValidation)
+		{
+			this._currentValidation = rule.validate(typeof value === 'undefined' ? this.value() : value).then(() =>
+			{
+				this._currentValidation = null
+			});
+		}
+
+		return this._currentValidation;
 	};
 
 	public clearValidation():void
@@ -121,6 +130,7 @@ export default class Field extends Disposable implements IValidatableRule
 			{
 				currentRule.dispose();
 			}
+			this._currentValidation = null;
 			const rule = parseBindingRule(ruleBindingValue);
 			this._rule(rule);
 		}
