@@ -81,6 +81,18 @@ export default class Field extends Disposable implements IValidatableRule
 
 	public set value(value:ko.Observable<any>)
 	{
+		if(!ko.isObservable(value))
+		{
+			throw new Error(`Non-observable value "${value}" passed to knockout-validator Field instance.`);
+		}
+		else if(!ko.isWritableObservable(value))
+		{
+			console.warn(`The observable passed to the "${this.name}" knockout-validator field is not writable. This is not recommended.`);
+		}
+		else
+		{
+			this._valueSubscriptions.push(value.subscribe(this._valueChangeHandler));
+		}
 		this._clearValueSubscriptions();
 		this._value = value;
 	}
@@ -172,6 +184,62 @@ export default class Field extends Disposable implements IValidatableRule
 	{
 		this._valueSubscriptions.forEach(subscription => subscription.dispose());
 		this._valueSubscriptions.length = 0;
+	}
+
+	private _valueChangeHandler(newValue:any)
+	{
+		let autoValidate = false;
+		let rateLimit = 0;
+
+		if(this.validateOn === 'value')
+		{
+			autoValidate = true;
+		}
+		else
+		{
+			let rateLimitTest = /value\(([0-9]+)\)/;
+			let result = rateLimitTest.exec(this.validateOn);
+		}
+		//
+		// var autoValidate = false,
+		// 	rateLimit = 0;
+		//
+		// if(!this.preventAutoValidation)
+		// {
+		// 	if(this.validateOn == 'value')
+		// 	{
+		// 		autoValidate = true;
+		// 	}
+		// 	else
+		// 	{
+		// 		var rateLimitTest = /value\(([0-9]+)\)/,
+		// 			result = rateLimitTest.exec(this.validateOn);
+		// 		if(result !== null)
+		// 		{
+		// 			autoValidate = true;
+		// 			rateLimit = parseInt(result[1], 10);
+		// 		}
+		// 	}
+		//
+		// 	if(autoValidate)
+		// 	{
+		// 		if(rateLimit > 0)
+		// 		{
+		// 			if(this._pendingValidationID !== null)
+		// 			{
+		// 				clearTimeout(this._pendingValidationID);
+		// 			}
+		// 			this._pendingValidationID = setTimeout(() =>
+		// 			{
+		// 				this.validate();
+		// 			}, rateLimit);
+		// 		}
+		// 		else
+		// 		{
+		// 			this.validate();
+		// 		}
+		// 	}
+		// }
 	}
 
 	private _detachFromValidator():void
