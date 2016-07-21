@@ -15,14 +15,15 @@ export default class Field extends Disposable implements IValidatableRule
 	public /*readonly*/ isValidating:ko.PureComputed<boolean>;
 	public /*readonly*/ validatedValue:ko.PureComputed<any>;
 	public /*readonly*/ isValid:ko.PureComputed<boolean>;
-	public value:ko.Observable<any>;
 	public name:string;
 
 	private _rule:ko.Observable<Rule> = ko.observable(null);
+	private _value:ko.Observable<any>;
 	private _validatedValue:ko.Observable<any> = ko.observable(null).extend({deferred : true});
 	private _validator:KnockoutValidator;
 	private _ruleBindingValue:RuleBindingValue;
 	private _validateOn:string;
+	private _valueSubscriptions:Array<ko.subscription> = [];
 
 	constructor(public id:string)
 	{
@@ -33,12 +34,12 @@ export default class Field extends Disposable implements IValidatableRule
 		{
 			const rule = this._rule();
 			return rule ? rule.isValidated() : false;
-		});
+		}).extend({deferred : true});
 		this.isValidating = ko.pureComputed(() =>
 		{
 			const rule = this._rule();
 			return rule ? rule.isValidating() : false;
-		});
+		}).extend({deferred : true});
 		this.isValid = ko.pureComputed({
 			read : () =>
 			{
@@ -53,7 +54,7 @@ export default class Field extends Disposable implements IValidatableRule
 					rule.isValid(isValid);
 				}
 			}
-		});
+		}).extend({deferred : true});
 	}
 
 	public get ruleType():RuleType
@@ -70,6 +71,17 @@ export default class Field extends Disposable implements IValidatableRule
 	public set validateOn(validateOn:string)
 	{
 		this._validateOn = validateOn;
+	}
+
+	public get value():ko.Observable<any>
+	{
+		return this._value;
+	}
+
+	public set value(value:ko.Observable<any>)
+	{
+		this._clearValueSubscriptions();
+		this._value = value;
 	}
 
 	public validate = (value?:any):Promise<boolean> =>
@@ -136,9 +148,20 @@ export default class Field extends Disposable implements IValidatableRule
 	public dispose():void
 	{
 		this._detachFromValidator();
+		this._clearValueSubscriptions();
 		elementMapper.removeField(this.id);
 
+		this.isValid.dispose();
+		this.isValidated.dispose();
+		this.isValidating.dispose();
+		this.validatedValue.dispose();
 		super.dispose();
+	}
+
+	private _clearValueSubscriptions():void
+	{
+		this._valueSubscriptions.forEach(subscription => subscription.dispose());
+		this._valueSubscriptions.length = 0;
 	}
 
 	private _detachFromValidator():void

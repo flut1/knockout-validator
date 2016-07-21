@@ -69,13 +69,22 @@ export default class Rule extends Disposable implements IValidatableRule {
 		{
 			case RuleType.COLLECTION_AND:
 			case RuleType.COLLECTION_OR:
+				this._isValidating(true);
 				const aggregate = this.ruleType === RuleType.COLLECTION_AND ? every : some;
-				return Promise.all((<Array<Rule>> this.test).map(rule => rule.validate(value))).then(
-					(results:Array<boolean>) => aggregate(results, result => !!result));
+				return Promise.all((<Array<Rule>> this.test).map(rule => rule.validate(value))).then((results:Array<boolean>) =>
+				{
+					this.isValidating(false);
+					return aggregate(results, result => !!result);
+				});
 			case RuleType.CHECKED:
 				return Promise.resolve(value === this.test);
 			case RuleType.FUNCTION:
-				return Promise.resolve((<SingleRuleFunction> this.test)(value));
+				this.isValidating(true);
+				return Promise.resolve((<SingleRuleFunction> this.test)(value)).then(result =>
+				{
+					this.isValidating(false);
+					return result;
+				});
 			case RuleType.REGEX:
 				return Promise.resolve((<RegExp> this.test).test(value));
 			default:

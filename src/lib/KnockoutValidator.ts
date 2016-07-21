@@ -2,7 +2,6 @@ import Disposable from 'seng-disposable';
 import * as ko from 'knockout';
 import ClassnameOptions  from './options/Classnames';
 import Field from "./fields/Field";
-import FieldState from "./fields/FieldState";
 import createBindings from "./bindings/createBindings";
 import some from 'lodash.some';
 import IValidatable from "./interface/IValidatable";
@@ -47,10 +46,7 @@ export default class KnockoutValidator extends Disposable implements IValidatabl
 	 * Returns an array of FieldState instances representing the state of each field in the
 	 * validator.
 	 */
-	public fields:ko.PureComputed<Array<FieldState>> = ko.pureComputed(() =>
-	{
-		return this._fields().map((field:Field) => field.state);
-	});
+	public fields:ko.PureComputed<Array<Field>> = ko.pureComputed(() => this._fields());
 
 	/**
 	 * Observable array of fields attached to this validator. The accessors of this fields are
@@ -68,7 +64,7 @@ export default class KnockoutValidator extends Disposable implements IValidatabl
 	public validate():Promise<boolean>
 	{
 		const fields = this._fields();
-		fields.forEach(field => field.state.isValid(null));
+		fields.forEach(field => field.isValid(null));
 
 		return Promise.all(fields.map(field => field.validate())).then((results:Array<boolean>) =>
 		{
@@ -102,7 +98,8 @@ export default class KnockoutValidator extends Disposable implements IValidatabl
 
 	public clearValidation():void
 	{
-
+		const fields:Array<Field> = this._fields();
+		fields.forEach(field => field.isValid(null));
 	}
 
 	/**
@@ -127,11 +124,11 @@ export default class KnockoutValidator extends Disposable implements IValidatabl
 		let fields = this._fields();
 		if(validatedOnly)
 		{
-			fields = fields.filter(field => field.state.isValidated());
+			fields = fields.filter(field => field.isValidated());
 		}
 		return fields.reduce((values:{[name:string]:any}, field:Field) =>
 		{
-			values[field.name] = field.state.value();
+			values[field.name] = field.value();
 			return values;
 		}, {});
 	}
@@ -169,7 +166,7 @@ export default class KnockoutValidator extends Disposable implements IValidatabl
 			let isValid = true;
 			for(let i = 0; i < fields.length; i++)
 			{
-				const fieldIsValid = fields[i].state.isValid();
+				const fieldIsValid = fields[i].isValid();
 				if(fieldIsValid === null)
 				{
 					return null;
@@ -180,9 +177,9 @@ export default class KnockoutValidator extends Disposable implements IValidatabl
 				}
 			}
 			return isValid;
-		}).extend({deferred: true});
+		});
 
-		this.isValidated = ko.pureComputed(() => !some(this._fields(), field => !field.isValidated())).extend({deferred: true});
-		this.isValidating = ko.pureComputed(() => some(this._fields(), field => field.isValidating())).extend({deferred: true});
+		this.isValidated = ko.pureComputed(() => !some(this._fields(), field => !field.isValidated()));
+		this.isValidating = ko.pureComputed(() => some(this._fields(), field => field.isValidating()));
 	}
 }
