@@ -8,6 +8,8 @@ import RuleType from "../rules/RuleType";
 import {RuleBindingValue} from "../rules/RuleBindingValue";
 import Rule from "../rules/Rule";
 import rulePlaceholder from "../rules/rulePlaceholder";
+import ValidationGroup from "../group/ValidationGroup";
+import every from 'lodash.every';
 
 export default class Field extends Disposable implements IValidatableRule
 {
@@ -17,6 +19,8 @@ export default class Field extends Disposable implements IValidatableRule
 	public /*readonly*/ isValid:ko.PureComputed<boolean>;
 	public name:string;
 
+	private _groupBinding:Array<ValidationGroup>|ValidationGroup = [];
+	private _groups:Array<ValidationGroup> = [];
 	private _rule:ko.Observable<Rule> = ko.observable(null);
 	private _value:ko.Observable<any>;
 	private _validatedValue:ko.Observable<any> = ko.observable(null).extend({deferred : true});
@@ -59,6 +63,17 @@ export default class Field extends Disposable implements IValidatableRule
 				}
 			}
 		}).extend({deferred : true});
+	}
+
+	public get group():Array<ValidationGroup>|ValidationGroup
+	{
+		return this._groupBinding;
+	}
+
+	public set group(groups:Array<ValidationGroup>|ValidationGroup)
+	{
+		this._groupBinding = groups;
+		this._groups = [].concat(groups);
 	}
 
 	public get ruleType():RuleType
@@ -205,6 +220,18 @@ export default class Field extends Disposable implements IValidatableRule
 		super.dispose();
 	}
 
+	public validateGroups():Promise<boolean>
+	{
+		if(!this._groups.length)
+		{
+			return Promise.resolve(true);
+		}
+
+		return Promise.all(this._groups.map(group => group.validate())).then((results:Array<boolean>) =>
+			every(results, result => !!result)
+		);
+	}
+
 	private _clearValueSubscriptions():void
 	{
 		this._valueSubscriptions.forEach(subscription => subscription.dispose());
@@ -232,6 +259,7 @@ export default class Field extends Disposable implements IValidatableRule
 				else
 				{
 					this.validate();
+					this.validateGroups();
 				}
 			}
 		}
