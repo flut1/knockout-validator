@@ -25,6 +25,9 @@ export default class Field extends Disposable implements IValidatableRule
 	private _validateOn:string;
 	private _valueSubscriptions:Array<ko.subscription> = [];
 	private _currentValidation:Promise<boolean> = null;
+	private _autoValidate:boolean = false;
+	private _rateLimitAutoValidate:number = 0;
+	private _pendingAutoValidateId:number = null;
 
 	constructor(public id:string)
 	{
@@ -71,7 +74,29 @@ export default class Field extends Disposable implements IValidatableRule
 
 	public set validateOn(validateOn:string)
 	{
-		this._validateOn = validateOn;
+		if(this._validateOn !== validateOn)
+		{
+			this._autoValidate = false;
+			this._rateLimitAutoValidate = 0;
+
+			if(this.validateOn === 'value')
+			{
+				this._autoValidate = true;
+			}
+			else
+			{
+				let rateLimitTest = /value\s?\(\s?([0-9]+)\s?\)/;
+				let result = rateLimitTest.exec(this.validateOn);
+
+				if(result !== null)
+				{
+					this._autoValidate = true;
+					this._rateLimitAutoValidate = parseInt(result[1], 10);
+				}
+			}
+
+			this._validateOn = validateOn;
+		}
 	}
 
 	public get value():ko.Observable<any>
@@ -188,58 +213,28 @@ export default class Field extends Disposable implements IValidatableRule
 
 	private _valueChangeHandler(newValue:any)
 	{
-		let autoValidate = false;
-		let rateLimit = 0;
-
-		if(this.validateOn === 'value')
+		if(this._autoValidate)
 		{
-			autoValidate = true;
+			if(this._rateLimitAutoValidate > 0)
+			{
+				if(this._currentValidation === null)
+				{
+					if(this._pendingAutoValidateId !== null)
+					{
+						clearTimeout(this._pendingAutoValidateId);
+					}
+					this._pendingAutoValidateId = setTimeout(() =>
+					{
+						this._pendingAutoValidateId = null;
+						this.validate();
+					}, this._rateLimitAutoValidate);
+				}
+				else
+				{
+					this.validate();
+				}
+			}
 		}
-		else
-		{
-			let rateLimitTest = /value\(([0-9]+)\)/;
-			let result = rateLimitTest.exec(this.validateOn);
-		}
-		//
-		// var autoValidate = false,
-		// 	rateLimit = 0;
-		//
-		// if(!this.preventAutoValidation)
-		// {
-		// 	if(this.validateOn == 'value')
-		// 	{
-		// 		autoValidate = true;
-		// 	}
-		// 	else
-		// 	{
-		// 		var rateLimitTest = /value\(([0-9]+)\)/,
-		// 			result = rateLimitTest.exec(this.validateOn);
-		// 		if(result !== null)
-		// 		{
-		// 			autoValidate = true;
-		// 			rateLimit = parseInt(result[1], 10);
-		// 		}
-		// 	}
-		//
-		// 	if(autoValidate)
-		// 	{
-		// 		if(rateLimit > 0)
-		// 		{
-		// 			if(this._pendingValidationID !== null)
-		// 			{
-		// 				clearTimeout(this._pendingValidationID);
-		// 			}
-		// 			this._pendingValidationID = setTimeout(() =>
-		// 			{
-		// 				this.validate();
-		// 			}, rateLimit);
-		// 		}
-		// 		else
-		// 		{
-		// 			this.validate();
-		// 		}
-		// 	}
-		// }
 	}
 
 	private _detachFromValidator():void
