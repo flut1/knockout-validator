@@ -4,7 +4,7 @@ import RuleType from "../rules/RuleType";
 interface IValidatableRule extends IValidatable {
 	name:string;
 	ruleType:RuleType;
-	rule(name?:string|number):IValidatableRule;
+	getRuleState(name?:string|number):IValidatableRule;
 }
 
 export default IValidatableRule;

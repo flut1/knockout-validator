@@ -1,7 +1,7 @@
-import Rule from "./Rule";
+import RuleState from "./RuleState";
 import RuleType from "./RuleType";
 
-const rulePlaceholder:Rule = new Rule(
+const rulePlaceholder:RuleState = new RuleState(
 	null,
 	RuleType.NONE,
 	function() {}

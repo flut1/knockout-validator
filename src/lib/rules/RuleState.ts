@@ -8,7 +8,7 @@ import Disposable from "seng-disposable";
 import {SingleRuleFunction} from "./RuleBindingValue";
 import rulePlaceholder from "./rulePlaceholder";
 
-export default class Rule extends Disposable implements IValidatableRule {
+export default class RuleState extends Disposable implements IValidatableRule {
 	public /*readonly*/ name:string;
 	public /*readonly*/ ruleType:RuleType;
 	public /*readonly*/ isValid:ko.PureComputed<boolean>;
@@ -33,11 +33,11 @@ export default class Rule extends Disposable implements IValidatableRule {
 		this._isCollection = ruleType === RuleType.COLLECTION_AND || ruleType === RuleType.COLLECTION_OR;
 		if(this._isCollection)
 		{
-			this.isValidated = ko.pureComputed(() => every(<Array<Rule>> this.test, rule => rule.isValidated()));
-			this.isValidating = ko.pureComputed(() => some(<Array<Rule>> this.test, rule => rule.isValidating()));
+			this.isValidated = ko.pureComputed(() => every(<Array<RuleState>> this.test, rule => rule.isValidated()));
+			this.isValidating = ko.pureComputed(() => some(<Array<RuleState>> this.test, rule => rule.isValidating()));
 			this.isValid = ko.pureComputed({
-				read : () => every(<Array<Rule>> this.test, rule => rule.isValid()),
-				write : (isValid:boolean) => this.test.forEach((rule:Rule) => rule.isValid(isValid))
+				read : () => every(<Array<RuleState>> this.test, rule => rule.isValid()),
+				write : (isValid:boolean) => this.test.forEach((rule:RuleState) => rule.isValid(isValid))
 			});
 		}
 		else
@@ -54,11 +54,11 @@ export default class Rule extends Disposable implements IValidatableRule {
 
 	}
 
-	public rule(name?:string|number):IValidatableRule
+	public getRule(name?:string|number):IValidatableRule
 	{
 		if(this._isCollection)
 		{
-			return typeof name === 'undefined' ? this.test[0] : (find(<Array<Rule>> this.test, rule => rule.name === name) || rulePlaceholder);
+			return typeof name === 'undefined' ? this.test[0] : (find(<Array<RuleState>> this.test, rule => rule.name === name) || rulePlaceholder);
 		}
 		return null;
 	}
@@ -71,7 +71,7 @@ export default class Rule extends Disposable implements IValidatableRule {
 			case RuleType.COLLECTION_OR:
 				this._isValidating(true);
 				const aggregate = this.ruleType === RuleType.COLLECTION_AND ? every : some;
-				return Promise.all((<Array<Rule>> this.test).map(rule => rule.validate(value))).then((results:Array<boolean>) =>
+				return Promise.all((<Array<RuleState>> this.test).map(rule => rule.validate(value))).then((results:Array<boolean>) =>
 				{
 					this.isValidating(false);
 					return aggregate(results, result => !!result);
@@ -103,7 +103,7 @@ export default class Rule extends Disposable implements IValidatableRule {
 		{
 			if(this._isCollection)
 			{
-				(<Array<Rule>> this.test).forEach(test => test.dispose());
+				(<Array<RuleState>> this.test).forEach(test => test.dispose());
 			}
 			this.isValid.dispose();
 			this.isValidated.dispose();
