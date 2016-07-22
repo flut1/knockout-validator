@@ -14,5 +14,5 @@ export const bindings:Array<ValidatorFieldBinding> = [
 	new ValidatorFieldBinding('validateOn', 'on', 'validateOn', '__koValidateOn', false),
 	new ValidatorFieldBinding('validationRule', 'rule', 'rule'),
 	new ValidatorFieldBinding('validationName', 'name', 'name', null, false, 'name'),
-	new ValidatorFieldBinding('validationGroup', 'group', 'group', '__koValidationGroup')
+	new ValidatorFieldBinding('validationGroups', 'groups', 'groups', '__koValidationGroup')
 ];

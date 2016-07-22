@@ -13,7 +13,7 @@ export default abstract class FieldCollection extends Disposable {
 	public /*readonly*/ isValid:ko.PureComputed<boolean>;
 	protected _rule:ko.Observable<RuleState> = ko.observable(null);
 	protected _currentValidation:Promise<boolean> = null;
-	protected _value:ko.Observable<any>;
+	protected _value:ko.Observable<any>|ko.PureComputed<any>;
 	protected _validateOn:string;
 	protected _autoValidate:boolean = false;
 	protected _rateLimitAutoValidate:number = 0;

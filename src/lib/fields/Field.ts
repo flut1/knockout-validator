@@ -5,12 +5,14 @@ import IValidatableRule from "../interface/IValidatableRule";
 import ValidationGroup from "./ValidationGroup";
 import every from 'lodash.every';
 import FieldCollection from "./FieldCollection";
+import getUnique from "../utils/getUnique";
 
 export default class Field extends FieldCollection implements IValidatableRule
 {
 	public /*readonly*/ validatedValue:ko.PureComputed<any>;
 	public name:string;
 
+	private _value:ko.Observable<any>;
 	private _groupBinding:Array<ValidationGroup>|ValidationGroup = [];
 	private _groups:Array<ValidationGroup> = [];
 	private _validator:KnockoutValidator;
@@ -47,15 +49,21 @@ export default class Field extends FieldCollection implements IValidatableRule
 		this._value = value;
 	}
 
-	public get group():Array<ValidationGroup>|ValidationGroup
+	public get groups():Array<ValidationGroup>|ValidationGroup
 	{
 		return this._groupBinding;
 	}
 
-	public set group(groups:Array<ValidationGroup>|ValidationGroup)
+	public set groups(groups:Array<ValidationGroup>|ValidationGroup)
 	{
 		this._groupBinding = groups;
-		this._groups = [].concat(groups);
+		const groupsArray = [].concat(groups);
+		getUnique(this._groups, groupsArray, (remove:Array<ValidationGroup>, add:Array<ValidationGroup>) =>
+		{
+			remove.forEach(group => group.removeField(this));
+			add.forEach(group => group.addField(this));
+		});
+		this._groups = groupsArray;
 	}
 
 	public clearValidation():void

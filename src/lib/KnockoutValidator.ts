@@ -43,7 +43,7 @@ export default class KnockoutValidator extends Disposable implements IValidatabl
 	public isValidated:ko.PureComputed<boolean>;
 
 	/**
-	 * Returns an array of FieldState instances representing the state of each field in the
+	 * Returns an array of Field instances representing the state of each field in the
 	 * validator.
 	 */
 	public fields:ko.PureComputed<Array<Field>> = ko.pureComputed(() => this._fields());
