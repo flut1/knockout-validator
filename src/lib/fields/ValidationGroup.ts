@@ -25,6 +25,15 @@ export default class ValidationGroup extends FieldCollection implements IValidat
 	public addField(field:Field):void
 	{
 		this._fields.push(field);
+		if(typeof field.value === 'undefined')
+		{
+			throw new Error('Trying to add field without value to ValidationGroup');
+		}
+		else if(!ko.isObservable(field))
+		{
+			throw new Error('Trying to add field with non-observable value to ValidationGroup');
+		}
+		this._valueSubscriptions.push(field.value.subscribe(this._onValueChange));
 	}
 
 	public removeField(field:Field):void
@@ -32,11 +41,14 @@ export default class ValidationGroup extends FieldCollection implements IValidat
 		const fields = this._fields();
 		for(let i=fields.length; i>=0; i-- )
 		{
-			while(fields.indexOf(field[i] >= 0))
+			if(fields[i] === field)
 			{
-				fields.splice(i, 1);
+				this._fields.splice(i, 1);
+				this._valueSubscriptions[i].dispose();
+				this._valueSubscriptions.splice(i, 1);
 			}
 		}
+
 	}
 
 	public get values():ValueMap
