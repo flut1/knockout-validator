@@ -89,8 +89,8 @@ describe('parseBindingRule', () =>
 		{
 			expect(rule.test).to.be.instanceOf(Array);
 			expect(rule.test).to.have.lengthOf(2);
-			expect(rule.test[0].type).to.equal(RuleType.CHECKED);
-			expect(rule.test[1].type).to.equal(RuleType.REGEX);
+			expect(rule.test[0].ruleType).to.equal(RuleType.CHECKED);
+			expect(rule.test[1].ruleType).to.equal(RuleType.REGEX);
 		})
 	});
 	describe('with an object argument with keys a, b and c', () =>
