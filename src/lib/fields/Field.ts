@@ -3,7 +3,7 @@ import KnockoutValidator from "../KnockoutValidator";
 import elementMapper from "../bindings/elementMapper";
 import IValidatableRule from "../interface/IValidatableRule";
 import ValidationGroup from "./ValidationGroup";
-import every from 'lodash.every';
+import every from 'lodash/every';
 import FieldCollection from "./FieldCollection";
 import getUnique from "../utils/getUnique";
 
@@ -12,7 +12,7 @@ export default class Field extends FieldCollection implements IValidatableRule
 	public /*readonly*/ validatedValue:ko.PureComputed<any>;
 	public name:string;
 
-	private _value:ko.Observable<any>;
+	protected _value:ko.Observable<any>;
 	private _groupBinding:Array<ValidationGroup>|ValidationGroup = [];
 	private _groups:Array<ValidationGroup> = [];
 	private _validator:KnockoutValidator;

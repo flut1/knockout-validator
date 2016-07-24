@@ -16,6 +16,8 @@ export default class ValidationGroup extends FieldCollection implements IValidat
 
 	constructor(rule:RuleBindingValue)
 	{
+		super();
+
 		if(!this._setRuleFromBindingValue(rule))
 		{
 			throw new Error('Invalid rule passed to ValidationGroup constructor.');

@@ -1,9 +1,9 @@
 import IValidatableRule from "../interface/IValidatableRule";
 import * as ko from 'knockout';
 import RuleType from "./RuleType";
-import some from 'lodash.some';
-import every from 'lodash.every';
-import find from 'lodash.find';
+import some from 'lodash/some';
+import every from 'lodash/every';
+import find from 'lodash/find';
 import Disposable from "seng-disposable";
 import {SingleRuleFunction} from "./RuleBindingValue";
 import rulePlaceholder from "./rulePlaceholder";
@@ -54,7 +54,7 @@ export default class RuleState extends Disposable implements IValidatableRule {
 
 	}
 
-	public getRule(name?:string|number):IValidatableRule
+	public getRuleState(name?:string|number):IValidatableRule
 	{
 		if(this._isCollection)
 		{

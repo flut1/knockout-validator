@@ -3,7 +3,7 @@ import * as ko from 'knockout';
 import ClassnameOptions  from './options/Classnames';
 import Field from "./fields/Field";
 import createBindings from "./bindings/createBindings";
-import some from 'lodash.some';
+import some from 'lodash/some';
 import IValidatable from "./interface/IValidatable";
 
 createBindings(ko.bindingHandlers);

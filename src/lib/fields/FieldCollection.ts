@@ -5,9 +5,8 @@ import {RuleBindingValue} from "../rules/RuleBindingValue";
 import parseBindingRule from "../rules/parseBindingRule";
 import RuleType from "../rules/RuleType";
 import rulePlaceholder from "../rules/rulePlaceholder";
-import {RuleBindingValue} from "../rules/RuleBindingValue";
 
-export default abstract class FieldCollection extends Disposable {
+abstract class FieldCollection extends Disposable {
 	public /*readonly*/ isValidated:ko.PureComputed<boolean>;
 	public /*readonly*/ isValidating:ko.PureComputed<boolean>;
 	public /*readonly*/ isValid:ko.PureComputed<boolean>;
@@ -18,11 +17,13 @@ export default abstract class FieldCollection extends Disposable {
 	protected _autoValidate:boolean = false;
 	protected _rateLimitAutoValidate:number = 0;
 	protected _pendingAutoValidateId:number = null;
-	protected _valueSubscriptions:Array<ko.subscription> = [];
+	protected _valueSubscriptions:Array<ko.subscription<any>> = [];
 	protected _ruleBindingValue:RuleBindingValue;
 
 	constructor()
 	{
+		super();
+
 		this.isValidated = ko.pureComputed(() =>
 		{
 			const rule = this._rule();
@@ -124,9 +125,11 @@ export default abstract class FieldCollection extends Disposable {
 
 		if(!this._currentValidation)
 		{
-			this._currentValidation = rule.validate(typeof value === 'undefined' ? this._value() : value).then(() =>
+			this._currentValidation = rule.validate(typeof value === 'undefined' ? this._value() : value).then(result =>
 			{
-				this._currentValidation = null
+				this._currentValidation = null;
+
+				return result;
 			});
 		}
 
@@ -192,3 +195,5 @@ export default abstract class FieldCollection extends Disposable {
 		}
 	}
 }
+
+export default FieldCollection;

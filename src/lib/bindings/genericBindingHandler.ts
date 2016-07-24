@@ -2,7 +2,7 @@ import * as ko from 'knockout';
 import ValidatorFieldBinding from "./ValidatorFieldBinding";
 import {bindings, SHORTHAND_BINDING_NAME} from "../const/bindings";
 import elementMapper from "./elementMapper";
-import find from 'lodash.find';
+import find from 'lodash/find';
 
 type BindingDescriptor = {
 	value:any,
