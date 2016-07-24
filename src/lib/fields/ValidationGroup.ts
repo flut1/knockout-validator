@@ -4,17 +4,18 @@ import FieldCollection from "./FieldCollection";
 import {RuleBindingValue} from "../rules/RuleBindingValue";
 import Field from "./Field";
 
-export default class ValidationGroup extends FieldCollection implements IValidatable {
-	public fields:ko.PureComputed<Array<Field>> = ko.pureComputed(() => this._fields());
+export default class ValidationGroup extends FieldCollection implements IValidatable
+{
+	public fields: ko.PureComputed<Array<Field>> = ko.pureComputed(() => this._fields());
 
-	protected _value:ko.PureComputed<ValueMap> = ko.pureComputed(() => this._fields().reduce(
-		(values:ValueMap, field:Field) => values[field.name] = field.value(), {})
+	protected _value: ko.PureComputed<ValueMap> = ko.pureComputed(() => this._fields().reduce(
+		(values: ValueMap, field: Field) => values[field.name] = field.value(), {})
 	);
-	private _fields:ko.ObservableArray<Field> = ko.observableArray<Field>([]).extend({
-		deferred : true
+	private _fields: ko.ObservableArray<Field> = ko.observableArray<Field>([]).extend({
+		deferred: true
 	});
 
-	constructor(rule:RuleBindingValue)
+	constructor(rule: RuleBindingValue)
 	{
 		super();
 
@@ -24,7 +25,7 @@ export default class ValidationGroup extends FieldCollection implements IValidat
 		}
 	}
 
-	public addField(field:Field):void
+	public addField(field: Field): void
 	{
 		this._fields.push(field);
 		if(typeof field.value === 'undefined')
@@ -38,10 +39,10 @@ export default class ValidationGroup extends FieldCollection implements IValidat
 		this._valueSubscriptions.push(field.value.subscribe(this._onValueChange));
 	}
 
-	public removeField(field:Field):void
+	public removeField(field: Field): void
 	{
 		const fields = this._fields();
-		for(let i=fields.length; i>=0; i-- )
+		for(let i = fields.length; i >= 0; i--)
 		{
 			if(fields[i] === field)
 			{
@@ -53,10 +54,10 @@ export default class ValidationGroup extends FieldCollection implements IValidat
 
 	}
 
-	public get values():ValueMap
+	public get values(): ValueMap
 	{
 		return this._value();
 	};
 }
 
-export type ValueMap = {[name:string]:any};
+export type ValueMap = {[name: string]: any};

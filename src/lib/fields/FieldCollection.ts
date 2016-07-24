@@ -4,7 +4,7 @@ import RuleState from "../rules/RuleState";
 import {RuleBindingValue} from "../rules/RuleBindingValue";
 import parseBindingRule from "../rules/parseBindingRule";
 import RuleType from "../rules/RuleType";
-import rulePlaceholder from "../rules/rulePlaceholder";
+import {rulePlaceholder} from "../rules/RuleState";
 
 abstract class FieldCollection extends Disposable {
 	public /*readonly*/ isValidated:ko.PureComputed<boolean>;

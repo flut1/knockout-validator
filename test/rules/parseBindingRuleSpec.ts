@@ -1,7 +1,7 @@
 import * as chai from 'chai';
 import parseBindingRule from '../../src/lib/rules/parseBindingRule';
 import RuleType from "../../src/lib/rules/RuleType";
-import Rule from "../../src/lib/rules/RuleState";
+import RuleState from "../../src/lib/rules/RuleState";
 const {expect} = chai;
 
 describe('parseBindingRule', () =>
@@ -124,19 +124,19 @@ describe('parseBindingRule', () =>
 
 		it('should return the correct types for parsed subrule "a"', () =>
 		{
-			const ruleA:Rule = rule.test.find((subRule:Rule) => (subRule.name === 'a'));
+			const ruleA:RuleState = rule.test.find((subRule:RuleState) => (subRule.name === 'a'));
 			expect(ruleA.ruleType).to.equal(RuleType.FUNCTION);
 		});
 
 		it('should return the correct types for parsed subrule "b"', () =>
 		{
-			const ruleB:Rule = rule.test.find((subRule:Rule) => (subRule.name === 'b'));
+			const ruleB:RuleState = rule.test.find((subRule:RuleState) => (subRule.name === 'b'));
 			expect(ruleB.ruleType).to.equal(RuleType.REGEX);
 		});
 
 		it('should return the correct types for parsed subrule "c"', () =>
 		{
-			const ruleC:Rule = rule.test.find((subRule:Rule) => (subRule.name === 'c'));
+			const ruleC:RuleState = rule.test.find((subRule:RuleState) => (subRule.name === 'c'));
 			expect(ruleC.ruleType).to.equal(RuleType.REGEX);
 		});
 	});
