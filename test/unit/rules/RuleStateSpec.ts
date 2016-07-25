@@ -9,23 +9,37 @@ describe('RuleState', () =>
 	{
 		describe('with a rule that takes 30ms to complete', () =>
 		{
-			const rule = new RuleState('test', RuleType.FUNCTION, () => (
-				new Promise<boolean>((resolve) =>
-				{
-					setTimeout(() => resolve(true), 30);
-				})
-			));
-			const validation = rule.validate('foobar');
 			it('should eventually resolve with the result', () =>
 			{
+				const rule = new RuleState('test', RuleType.FUNCTION, () => (
+					new Promise<boolean>((resolve) =>
+					{
+						setTimeout(() => resolve(true), 30);
+					})
+				));
+				const validation = rule.validate('foobar');
 				expect(validation).to.eventually.equal(true);
 			});
 			it('should initially set isValidating to "true"', () =>
 			{
+				const rule = new RuleState('test', RuleType.FUNCTION, () => (
+					new Promise<boolean>((resolve) =>
+					{
+						setTimeout(() => resolve(true), 30);
+					})
+				));
+				rule.validate('foobar');
 				expect(rule.isValidating()).to.equal(true);
 			});
 			it('should return isValidating to false after 30ms', done =>
 			{
+				const rule = new RuleState('test', RuleType.FUNCTION, () => (
+					new Promise<boolean>((resolve) =>
+					{
+						setTimeout(() => resolve(true), 30);
+					})
+				));
+				rule.validate('foobar');
 				setTimeout(() =>
 				{
 					expect(rule.isValidating()).to.equal(false);
