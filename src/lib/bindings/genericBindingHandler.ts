@@ -135,26 +135,18 @@ value that is not a writable observable.`);
 	return value;
 };
 
-const initField = (element:any, id:string, bindingValues:{[name:string]:BindingDescriptor},
-                   allBindingsAccessor:ko.AllBindingsAccessor, viewModel:any, bindingContext:ko.BindingContext<any>):ko.BindingHandlerControlsDescendant|void =>
+const injectContextValues = (
+	element:any, bindingValues:{[name:string]:BindingDescriptor}, bindingContext:ko.BindingContext<any>
+):ko.BindingHandlerControlsDescendant|void =>
 {
-	const field = elementMapper.createField(id);
-	const value = createValueBinding(element, allBindingsAccessor, viewModel, bindingContext);
 	const addToContext:Array<any> = [];
-	field.value = value;
 	Object.keys(bindingValues).forEach(bindingName =>
 	{
 		const bindingDescriptor:BindingDescriptor = bindingValues[bindingName];
-		field[bindingDescriptor.binding.validatorFieldProp] = ko.unwrap(bindingDescriptor.value);
 		if(bindingDescriptor.binding.inheritFromContextProp)
 		{
 			addToContext.push(bindingDescriptor);
 		}
-	});
-
-	ko.utils.domNodeDisposal.addDisposeCallback(element, function()
-	{
-		field.dispose();
 	});
 
 	if(addToContext.length)
@@ -162,7 +154,8 @@ const initField = (element:any, id:string, bindingValues:{[name:string]:BindingD
 		const innerBindingContext = bindingContext.extend(addToContext.reduce(
 			function(context:any, bindingDescriptor:BindingDescriptor)
 			{
-				context[bindingDescriptor.binding.inheritFromContextProp] = bindingDescriptor.value;
+				context[bindingDescriptor.binding.inheritFromContextProp] = ensureObservable(bindingDescriptor.value);
+				return context;
 			}, {})
 		);
 		ko.applyBindingsToDescendants(innerBindingContext, element);
@@ -171,6 +164,26 @@ const initField = (element:any, id:string, bindingValues:{[name:string]:BindingD
 
 	return null;
 };
+
+const initField = (element:any, id:string, bindingValues:{[name:string]:BindingDescriptor},
+                   allBindingsAccessor:ko.AllBindingsAccessor, viewModel:any, bindingContext:ko.BindingContext<any>):void =>
+{
+	const field = elementMapper.createField(id);
+	const value = createValueBinding(element, allBindingsAccessor, viewModel, bindingContext);
+	field.value = value;
+	Object.keys(bindingValues).forEach(bindingName =>
+	{
+		const bindingDescriptor:BindingDescriptor = bindingValues[bindingName];
+		field[bindingDescriptor.binding.validatorFieldProp] = ko.unwrap(bindingDescriptor.value);
+	});
+
+	ko.utils.domNodeDisposal.addDisposeCallback(element, function()
+	{
+		field.dispose();
+	});
+};
+
+const ensureObservable = (value:any) => ko.isObservable(value) ? value : ko.observable(value);
 
 export default (isInit:boolean, bindingName:string,
                 element:any, valueAccessor:() => any, allBindingsAccessor:ko.AllBindingsAccessor, viewModel:any, bindingContext:ko.BindingContext<any>):ko.BindingHandlerControlsDescendant|void =>
@@ -189,8 +202,10 @@ export default (isInit:boolean, bindingName:string,
 
 				if(bindingValues['validationName'])
 				{
-					return initField(element, id, bindingValues, allBindingsAccessor, viewModel, bindingContext);
+					initField(element, id, bindingValues, allBindingsAccessor, viewModel, bindingContext);
 				}
+
+				return injectContextValues(element, bindingValues, bindingContext);
 			}
 		}
 	}

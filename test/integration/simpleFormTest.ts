@@ -16,6 +16,7 @@ describe('simple form integration', () =>
 
 	it('should parse bindings and all that', () =>
 	{
+		console.log(ko.contextFor(document.querySelector('form input'))['$validator']);
 		expect(viewModel.testValidator.fields()).to.have.lengthOf(1);
 	})
 });
