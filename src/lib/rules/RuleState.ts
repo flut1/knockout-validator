@@ -15,7 +15,7 @@ export default class RuleState extends Disposable implements IValidatableRule {
 	public /*readonly*/ isValidating:ko.PureComputed<boolean>;
 	public /*readonly*/ test:any;
 	private _isValid:ko.Observable<boolean>;
-	private _isValidating:ko.Observable<boolean>;
+	private _isValidating:ko.Observable<number>;
 	private _isCollection:boolean;
 
 	constructor(
@@ -42,13 +42,13 @@ export default class RuleState extends Disposable implements IValidatableRule {
 		else
 		{
 			this._isValid = ko.observable(null).extend({deferred : true});
-			this._isValidating = ko.observable(false).extend({deferred : true});
+			this._isValidating = ko.observable(0).extend({deferred : true});
 			this.isValidated = ko.pureComputed(() => this._isValid() === null);
 			this.isValid = ko.pureComputed({
 				read : () => this._isValid(),
 				write : (isValid:boolean) => this._isValid(isValid)
 			});
-			this.isValidating = ko.pureComputed(() => this._isValidating());
+			this.isValidating = ko.pureComputed(() => !!this._isValidating());
 		}
 
 	}
@@ -68,20 +68,20 @@ export default class RuleState extends Disposable implements IValidatableRule {
 		{
 			case RuleType.COLLECTION_AND:
 			case RuleType.COLLECTION_OR:
-				this._isValidating(true);
+				this._isValidating(this._isValidating() + 1);
 				const aggregate = this.ruleType === RuleType.COLLECTION_AND ? every : some;
 				return Promise.all((<Array<RuleState>> this.test).map(rule => rule.validate(value))).then((results:Array<boolean>) =>
 				{
-					this.isValidating(false);
+					this._isValidating(Math.max(0, this._isValidating() - 1));
 					return aggregate(results, result => !!result);
 				});
 			case RuleType.CHECKED:
 				return Promise.resolve(value === this.test);
 			case RuleType.FUNCTION:
-				this.isValidating(true);
+				this._isValidating(this._isValidating() + 1);
 				return Promise.resolve((<SingleRuleFunction> this.test)(value)).then(result =>
 				{
-					this.isValidating(false);
+					this._isValidating(Math.max(0, this._isValidating() - 1));
 					return result;
 				});
 			case RuleType.REGEX:
