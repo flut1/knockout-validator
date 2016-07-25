@@ -84,7 +84,7 @@ export default class RuleState extends Disposable implements IValidatableRule {
 					return result;
 				});
 			case RuleType.REGEX:
-				return Promise.resolve((<RegExp> this.test).test(value));
+				return Promise.resolve((typeof value === 'string') && (<RegExp> this.test).test(value));
 			default:
 				throw new Error(`Trying to validate rule with unknown type: ${this.ruleType}`);
 		}
