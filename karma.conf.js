@@ -3,7 +3,7 @@ var path = require('path');
 module.exports = function (config)
 {
 	config.set({
-		frameworks: ['source-map-support', 'mocha', 'chai'],
+		frameworks: ['mocha', 'chai'],
 		files: [
 			'./test/index.ts'
 		],
@@ -11,11 +11,12 @@ module.exports = function (config)
 		preprocessors: {
 			'./src/**/*.ts': [
 				'webpack',
-				'sourcemap',
-				'coverage'
+				'coverage',
+				'sourcemap'
 			],
 			'./test/**/*.ts': [
-				'webpack'
+				'webpack',
+				'sourcemap'
 			]
 		},
 		webpack: require('./config/webpack.config.test')(),

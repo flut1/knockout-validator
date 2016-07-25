@@ -1,10 +1,10 @@
 /*eslint-disable */
 var path = require('path');
+var webpack = require('webpack');
 
 module.exports = function()
 {
 	return {
-		devtool: 'inline-source-map',
 		resolve: {
 			extensions: ['', '.ts', '.js']
 		},
@@ -31,6 +31,12 @@ module.exports = function()
 					]
 				}
 			]
-		}
+		},
+		plugins: [
+			new webpack.SourceMapDevToolPlugin({
+				filename: null, // if no value is provided the sourcemap is inlined
+				test: /\.(ts|js)($|\?)/i // process .js and .ts files only
+			})
+		]
 	};
 };

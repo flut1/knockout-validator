@@ -77,6 +77,7 @@ export default class RuleState extends Disposable implements IValidatableRule {
 				return Promise.resolve(value === this.test);
 			case RuleType.FUNCTION:
 				this._isValidating(this._isValidating() + 1);
+
 				return Promise.resolve((<SingleRuleFunction> this.test)(value)).then(result =>
 				{
 					this._isValidating(Math.max(0, this._isValidating() - 1));
