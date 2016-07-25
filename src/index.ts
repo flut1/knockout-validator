@@ -1,5 +1,3 @@
-import {default as _export} from './lib/Example';
-
-export {default as IExample} from './lib/IExample';
+import {default as _export} from './lib/KnockoutValidator';
 
 export default _export;

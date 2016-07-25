@@ -10,6 +10,7 @@ npm-debug.log
 /dist
 /test/*.js
 !/test/index.js
+.old
 
 # .npmignore
 .editorconfig
