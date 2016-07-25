@@ -1,6 +1,6 @@
 import * as chai from 'chai';
-import {ElementMapper} from "../../src/lib/bindings/elementMapper";
-import Field from "../../src/lib/fields/Field";
+import {ElementMapper} from "../../../src/lib/bindings/elementMapper";
+import Field from "../../../src/lib/fields/Field";
 const Set:any = require('es6-set');
 const {expect} = chai;
 

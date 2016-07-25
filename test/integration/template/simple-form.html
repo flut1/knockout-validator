@@ -1,0 +1,5 @@
+<form data-bind="validateWith: testValidator, submit : function(){testValidator.validate()}">
+	<input type="text" name="test-input" data-bind="validationRule : /abc/" />
+
+	<button type="submit">validate</button>
+</form>

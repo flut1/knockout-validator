@@ -1,5 +1,5 @@
 import * as chai from 'chai';
-import {getValueBindingKey} from "../../src/lib/bindings/genericBindingHandler";
+import {getValueBindingKey} from "../../../src/lib/bindings/genericBindingHandler";
 const {expect} = chai;
 
 describe('getValueBindingKey', () =>

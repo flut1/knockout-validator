@@ -1,5 +1,5 @@
 import * as chai from 'chai';
-import getUnique from "../../src/lib/utils/getUnique";
+import getUnique from "../../../src/lib/utils/getUnique";
 const {expect} = chai;
 
 describe('getUnique', () =>

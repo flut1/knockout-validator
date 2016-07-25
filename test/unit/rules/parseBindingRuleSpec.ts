@@ -1,7 +1,7 @@
 import * as chai from 'chai';
-import parseBindingRule from '../../src/lib/rules/parseBindingRule';
-import RuleType from "../../src/lib/rules/RuleType";
-import RuleState from "../../src/lib/rules/RuleState";
+import parseBindingRule from '../../../src/lib/rules/parseBindingRule';
+import RuleType from "../../../src/lib/rules/RuleType";
+import RuleState from "../../../src/lib/rules/RuleState";
 const {expect} = chai;
 
 describe('parseBindingRule', () =>

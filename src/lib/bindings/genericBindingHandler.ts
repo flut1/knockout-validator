@@ -105,7 +105,6 @@ Use the selectedOptions binding instead.`);
 	if(typeof value === 'undefined')
 	{
 		value = ko.observable('');
-		ko.bindingHandlers[value].init(element, () => value, allBindingsAccessor, viewModel, bindingContext);
 	}
 	else
 	{
@@ -115,6 +114,23 @@ Use the selectedOptions binding instead.`);
 value that is not a writable observable.`);
 		}
 	}
+
+	ko.bindingHandlers[valueBindingKey].init(element, () => value, allBindingsAccessor, viewModel, bindingContext);
+
+	ko.computed({
+		read: function()
+		{
+			var fieldValue = value();
+			ko.unwrap(fieldValue);
+
+			if(typeof ko.bindingHandlers[valueBindingKey].update == 'function')
+			{
+				ko.bindingHandlers[valueBindingKey].update(element, () => fieldValue, allBindingsAccessor, viewModel, bindingContext);
+			}
+		},
+		// cast element because typings are incorrect
+		disposeWhenNodeIsRemoved: <any> element
+	});
 
 	return value;
 };

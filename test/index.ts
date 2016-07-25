@@ -4,14 +4,21 @@ import * as chai from 'chai';
 import * as chaiAsPromised from 'chai-as-promised';
 chai.use(chaiAsPromised);
 
-// require all test files
-const testsContext = require.context(
-	'./',
+// require all unit test files
+const unitTestContext = require.context(
+	'./unit/',
 	true,
 	/Spec\.ts/
 );
+unitTestContext.keys().forEach(unitTestContext);
 
-testsContext.keys().forEach(testsContext);
+// require all integration test files
+const integrationTestContext = require.context(
+	'./integration/',
+	true,
+	/Test\.ts/
+);
+integrationTestContext.keys().forEach(integrationTestContext);
 
 // require all source files
 const sourcesContext = require.context(

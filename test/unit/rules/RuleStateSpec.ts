@@ -1,6 +1,6 @@
 import * as chai from 'chai';
-import RuleState from "../../src/lib/rules/RuleState";
-import RuleType from "../../src/lib/rules/RuleType";
+import RuleState from "../../../src/lib/rules/RuleState";
+import RuleType from "../../../src/lib/rules/RuleType";
 const {expect} = chai;
 
 describe('RuleState', () =>
