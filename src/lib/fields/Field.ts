@@ -3,7 +3,7 @@ import KnockoutValidator from "../KnockoutValidator";
 import elementMapper from "../bindings/elementMapper";
 import IValidatableRule from "../interface/IValidatableRule";
 import ValidationGroup from "./ValidationGroup";
-import every from 'lodash/every';
+import * as every from 'lodash/every';
 import FieldCollection from "./FieldCollection";
 import getUnique from "../utils/getUnique";
 

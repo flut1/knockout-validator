@@ -1,9 +1,9 @@
 import IValidatableRule from "../interface/IValidatableRule";
 import * as ko from 'knockout';
 import RuleType from "./RuleType";
-import some from 'lodash/some';
-import every from 'lodash/every';
-import find from 'lodash/find';
+import * as some from 'lodash/some';
+import * as every from 'lodash/every';
+import * as find from 'lodash/find';
 import Disposable from "seng-disposable";
 import {SingleRuleFunction} from "./RuleBindingValue";
 
@@ -42,7 +42,7 @@ export default class RuleState extends Disposable implements IValidatableRule {
 		else
 		{
 			this._isValid = ko.observable(null).extend({deferred : true});
-			this._isValidating = ko.observable(0).extend({deferred : true});
+			this._isValidating = ko.observable(0);
 			this.isValidated = ko.pureComputed(() => this._isValid() === null);
 			this.isValid = ko.pureComputed({
 				read : () => this._isValid(),
@@ -68,11 +68,9 @@ export default class RuleState extends Disposable implements IValidatableRule {
 		{
 			case RuleType.COLLECTION_AND:
 			case RuleType.COLLECTION_OR:
-				this._isValidating(this._isValidating() + 1);
 				const aggregate = this.ruleType === RuleType.COLLECTION_AND ? every : some;
 				return Promise.all((<Array<RuleState>> this.test).map(rule => rule.validate(value))).then((results:Array<boolean>) =>
 				{
-					this._isValidating(Math.max(0, this._isValidating() - 1));
 					return aggregate(results, result => !!result);
 				});
 			case RuleType.CHECKED:
