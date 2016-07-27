@@ -6,6 +6,7 @@ import * as every from 'lodash/every';
 import * as find from 'lodash/find';
 import Disposable from "seng-disposable";
 import {SingleRuleFunction} from "./RuleBindingValue";
+import scheduleKoResolve from "../utils/scheduleKoResolve";
 
 export default class RuleState extends Disposable implements IValidatableRule {
 	public /*readonly*/ name:string;
@@ -64,6 +65,7 @@ export default class RuleState extends Disposable implements IValidatableRule {
 
 	public validate(value:any):Promise<boolean>
 	{
+		let validation:Promise<boolean>;
 		switch(this.ruleType)
 		{
 			case RuleType.COLLECTION_AND:
@@ -74,20 +76,28 @@ export default class RuleState extends Disposable implements IValidatableRule {
 					return aggregate(results, result => !!result);
 				});
 			case RuleType.CHECKED:
-				return Promise.resolve(value === this.test);
+				validation = Promise.resolve(value === this.test);
+				break;
 			case RuleType.FUNCTION:
 				this._isValidating(this._isValidating() + 1);
 
-				return Promise.resolve((<SingleRuleFunction> this.test)(value)).then(result =>
+				validation = Promise.resolve((<SingleRuleFunction> this.test)(value)).then(result =>
 				{
 					this._isValidating(Math.max(0, this._isValidating() - 1));
 					return result;
 				});
+				break;
 			case RuleType.REGEX:
-				return Promise.resolve((typeof value === 'string') && (<RegExp> this.test).test(value));
+				validation = Promise.resolve((typeof value === 'string') && (<RegExp> this.test).test(value));
+				break;
 			default:
 				throw new Error(`Trying to validate rule with unknown type: ${this.ruleType}`);
 		}
+		return validation.then(result =>
+		{
+			this._isValid(result);
+			return scheduleKoResolve(result);
+		});
 	}
 
 	public clearValidation():void

@@ -18,7 +18,7 @@ describe('RuleState', () =>
 					})
 				));
 				const validation = rule.validate('foobar');
-				expect(validation).to.eventually.equal(true);
+				return expect(validation).to.eventually.equal(true);
 			});
 			it('should initially set isValidating to "true"', () =>
 			{
@@ -85,7 +85,7 @@ describe('RuleState', () =>
 					))
 				]);
 				const validation = rule.validate('foobar');
-				expect(validation).to.eventually.equal(false);
+				return expect(validation).to.eventually.equal(false);
 			});
 			it('should return isValidating to false after both rules complete', done =>
 			{
@@ -140,7 +140,7 @@ describe('RuleState', () =>
 			it('should resolve with true', () =>
 			{
 				const validation = rule.validate(false);
-				expect(validation).to.eventually.equal(true);
+				return expect(validation).to.eventually.equal(true);
 			});
 		});
 		describe('with multiple nested COLLECTION_OR where all eventually resolve with false', () =>
@@ -172,7 +172,7 @@ describe('RuleState', () =>
 			it('should resolve with false', () =>
 			{
 				const validation = rule.validate(false);
-				expect(validation).to.eventually.equal(false);
+				return expect(validation).to.eventually.equal(false);
 			});
 		});
 		describe('with a false CHECKED rule', () =>
@@ -181,12 +181,12 @@ describe('RuleState', () =>
 			it('should resolve with false for a true value', () =>
 			{
 				const validation = rule.validate(false);
-				expect(validation).to.eventually.equal(true);
+				return expect(validation).to.eventually.equal(true);
 			});
 			it('should resolve with true for a false value', () =>
 			{
 				const validation = rule.validate(true);
-				expect(validation).to.eventually.equal(false);
+				return expect(validation).to.eventually.equal(false);
 			});
 		});
 		describe('with a REGEX rule', () =>
@@ -195,17 +195,17 @@ describe('RuleState', () =>
 			it('should resolve with true for a matching string value', () =>
 			{
 				const validation = rule.validate('123abc');
-				expect(validation).to.eventually.equal(true);
+				return expect(validation).to.eventually.equal(true);
 			});
 			it('should resolve with false for a non-matching string value', () =>
 			{
 				const validation = rule.validate('12abcd');
-				expect(validation).to.eventually.equal(false);
+				return expect(validation).to.eventually.equal(false);
 			});
 			it('should resolve with false for a non-string value', () =>
 			{
 				const validation = rule.validate({foo : 'bar'});
-				expect(validation).to.eventually.equal(false);
+				return expect(validation).to.eventually.equal(false);
 			});
 		});
 	});

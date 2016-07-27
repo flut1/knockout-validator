@@ -5,6 +5,7 @@ import {RuleBindingValue} from "../rules/RuleBindingValue";
 import parseBindingRule from "../rules/parseBindingRule";
 import RuleType from "../rules/RuleType";
 import {rulePlaceholder} from "../rules/RuleState";
+import disposeSubscriptionArray from "../utils/disposeSubscriptionArray";
 
 abstract class FieldCollection extends Disposable {
 	public /*readonly*/ isValidated:ko.PureComputed<boolean>;
@@ -18,6 +19,7 @@ abstract class FieldCollection extends Disposable {
 	protected _rateLimitAutoValidate:number = 0;
 	protected _pendingAutoValidateId:number = null;
 	protected _valueSubscriptions:Array<ko.subscription<any>> = [];
+	protected _isValidSubscriptions:Array<ko.subscription<boolean>> = [];
 	protected _ruleBindingValue:RuleBindingValue;
 
 	constructor()
@@ -138,7 +140,8 @@ abstract class FieldCollection extends Disposable {
 
 	public dispose():void
 	{
-		this._clearValueSubscriptions();
+		disposeSubscriptionArray(this._valueSubscriptions);
+		disposeSubscriptionArray(this._isValidSubscriptions);
 		this.isValid.dispose();
 		this.isValidated.dispose();
 		this.isValidating.dispose();
@@ -171,12 +174,6 @@ abstract class FieldCollection extends Disposable {
 				}
 			}
 		}
-	}
-
-	protected _clearValueSubscriptions():void
-	{
-		this._valueSubscriptions.forEach(subscription => subscription.dispose());
-		this._valueSubscriptions.length = 0;
 	}
 
 	protected _setRuleFromBindingValue(ruleBindingValue:RuleBindingValue):RuleState

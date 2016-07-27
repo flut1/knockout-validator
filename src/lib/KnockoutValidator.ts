@@ -5,6 +5,7 @@ import Field from "./fields/Field";
 import createBindings from "./bindings/createBindings";
 import * as some from 'lodash/some';
 import IValidatable from "./interface/IValidatable";
+import scheduleKoResolve from "./utils/scheduleKoResolve";
 
 createBindings(ko.bindingHandlers);
 
@@ -76,10 +77,7 @@ export default class KnockoutValidator extends Disposable implements IValidatabl
 					isValid = false;
 				}
 			}
-			return new Promise((resolve:(result:boolean) => void) =>
-			{
-				ko.tasks.schedule(() => resolve(isValid));
-			});
+			return scheduleKoResolve(isValid);
 		});
 	}
 

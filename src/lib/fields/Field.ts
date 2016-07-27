@@ -6,6 +6,7 @@ import ValidationGroup from "./ValidationGroup";
 import * as every from 'lodash/every';
 import FieldCollection from "./FieldCollection";
 import getUnique from "../utils/getUnique";
+import disposeSubscriptionArray from "../utils/disposeSubscriptionArray";
 
 export default class Field extends FieldCollection implements IValidatableRule
 {
@@ -23,6 +24,7 @@ export default class Field extends FieldCollection implements IValidatableRule
 		super();
 
 		this.validatedValue = ko.pureComputed(() => this._validatedValue());
+		this._isValidSubscriptions.push(this.isValid.subscribe(this._isValidChangeHandler));
 
 	}
 
@@ -45,7 +47,7 @@ export default class Field extends FieldCollection implements IValidatableRule
 		{
 			this._valueSubscriptions.push(value.subscribe(this._onValueChange));
 		}
-		this._clearValueSubscriptions();
+		disposeSubscriptionArray(this._valueSubscriptions);
 		this._value = value;
 	}
 
@@ -110,6 +112,36 @@ export default class Field extends FieldCollection implements IValidatableRule
 		return Promise.all(this._groups.map(group => group.validate())).then((results:Array<boolean>) =>
 			every(results, result => !!result)
 		);
+	}
+
+	private _isValidChangeHandler = (isValid:boolean):void =>
+	{
+		if(isValid !== null)
+		{
+			this._validatedValue(this._value());
+		}
+		this._applyValidationClasses();
+	};
+
+	private _applyValidationClasses():void
+	{
+		if(this._validator)
+		{
+			const isValid = this.isValid();
+			const modClasses:{[classname:string]:string} = {};
+			if(this._validator.classnames.isInvalid)
+			{
+				modClasses[this._validator.classnames.isInvalid] = isValid === false ? 'add' : 'remove';
+			}
+			if(this._validator.classnames.isValid)
+			{
+				modClasses[this._validator.classnames.isValid] = isValid === true ? 'add' : 'remove';
+			}
+			if(this._validator.classnames.isValidating)
+			{
+				modClasses[this._validator.classnames.isValidating] = isValid === null ? 'remove' : 'add';
+			}
+		}
 	}
 
 	private _detachFromValidator():void
