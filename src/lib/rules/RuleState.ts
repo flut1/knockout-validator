@@ -33,12 +33,16 @@ export default class RuleState extends Disposable implements IValidatableRule {
 		this._isCollection = ruleType === RuleType.COLLECTION_AND || ruleType === RuleType.COLLECTION_OR;
 		if(this._isCollection)
 		{
-			this.isValidated = ko.pureComputed(() => every(<Array<RuleState>> this.test, rule => rule.isValidated()));
-			this.isValidating = ko.pureComputed(() => some(<Array<RuleState>> this.test, rule => rule.isValidating()));
+			this.isValidated = ko.pureComputed(
+				() => every(<Array<RuleState>> this.test, rule => rule.isValidated())
+			).extend({deferred : true});
+			this.isValidating = ko.pureComputed(
+				() => some(<Array<RuleState>> this.test, rule => rule.isValidating())
+			).extend({deferred : true});
 			this.isValid = ko.pureComputed({
 				read : () => every(<Array<RuleState>> this.test, rule => rule.isValid()),
 				write : (isValid:boolean) => this.test.forEach((rule:RuleState) => rule.isValid(isValid))
-			});
+			}).extend({deferred : true});
 		}
 		else
 		{

@@ -11,9 +11,7 @@ export default class ValidationGroup extends FieldCollection implements IValidat
 	protected _value: ko.PureComputed<ValueMap> = ko.pureComputed(() => this._fields().reduce(
 		(values: ValueMap, field: Field) => values[field.name] = field.value(), {})
 	);
-	private _fields: ko.ObservableArray<Field> = ko.observableArray<Field>([]).extend({
-		deferred: true
-	});
+	private _fields: ko.ObservableArray<Field> = ko.observableArray<Field>([]);
 
 	constructor(rule: RuleBindingValue)
 	{

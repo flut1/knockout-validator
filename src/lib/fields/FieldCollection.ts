@@ -30,12 +30,12 @@ abstract class FieldCollection extends Disposable {
 		{
 			const rule = this._rule();
 			return rule ? rule.isValidated() : false;
-		}).extend({deferred : true});
+		});
 		this.isValidating = ko.pureComputed(() =>
 		{
 			const rule = this._rule();
 			return rule ? rule.isValidating() : false;
-		}).extend({deferred : true});
+		});
 		this.isValid = ko.pureComputed({
 			read : () =>
 			{
@@ -50,7 +50,7 @@ abstract class FieldCollection extends Disposable {
 					rule.isValid(isValid);
 				}
 			}
-		}).extend({deferred : true});
+		});
 	}
 
 	public getRuleState(name?:string|number):RuleState

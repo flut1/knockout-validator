@@ -17,7 +17,7 @@ export default class Field extends FieldCollection implements IValidatableRule
 	private _groupBinding:Array<ValidationGroup>|ValidationGroup = [];
 	private _groups:Array<ValidationGroup> = [];
 	private _validator:KnockoutValidator;
-	private _validatedValue:ko.Observable<any> = ko.observable(null).extend({deferred : true});
+	private _validatedValue:ko.Observable<any> = ko.observable(null);
 
 	constructor(public id:string, private _element:HTMLElement)
 	{

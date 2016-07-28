@@ -175,9 +175,9 @@ export default class KnockoutValidator extends Disposable implements IValidatabl
 				}
 			}
 			return isValid;
-		});
+		}).extend({deferred : true});
 
-		this.isValidated = ko.pureComputed(() => !some(this._fields(), field => !field.isValidated()));
-		this.isValidating = ko.pureComputed(() => some(this._fields(), field => field.isValidating()));
+		this.isValidated = ko.pureComputed(() => !some(this._fields(), field => !field.isValidated())).extend({deferred : true});
+		this.isValidating = ko.pureComputed(() => some(this._fields(), field => field.isValidating())).extend({deferred : true});
 	}
 }
