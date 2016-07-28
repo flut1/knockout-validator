@@ -51,16 +51,13 @@ describe('simple form integration', () =>
 		});
 	});
 
-	it('should add an invalid class when invalid', done =>
+	it('should add an invalid class when invalid', () =>
 	{
 		viewModel.testValidator.classnames.isInvalid = 'invalid';
-		(<HTMLInputElement> document.querySelector('.simple-form-submit')).click();
 		const testInput = <HTMLInputElement> document.querySelector('.test-input');
-
-		setTimeout(() =>
+		return viewModel.testValidator.validate().then(() =>
 		{
 			expect(testInput.className).to.contain('invalid');
-			done();
-		}, 100);
+		});
 	});
 });

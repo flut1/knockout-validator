@@ -168,7 +168,7 @@ const injectContextValues = (
 const initField = (element:any, id:string, bindingValues:{[name:string]:BindingDescriptor},
                    allBindingsAccessor:ko.AllBindingsAccessor, viewModel:any, bindingContext:ko.BindingContext<any>):void =>
 {
-	const field = elementMapper.createField(id);
+	const field = elementMapper.createField(id, element);
 	const value = createValueBinding(element, allBindingsAccessor, viewModel, bindingContext);
 	field.value = value;
 	Object.keys(bindingValues).forEach(bindingName =>

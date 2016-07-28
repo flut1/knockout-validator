@@ -49,11 +49,12 @@ export class ElementMapper
 	 * Creates a new field and stores it in the [[fields]] map so it can be saved for later
 	 * retrieval.
 	 * @param id
+	 * @param element
 	 * @returns {Field}
 	 */
-	public createField = (id:string):Field =>
+	public createField = (id:string, element:HTMLElement = null):Field =>
 	{
-		this._fields[id] = new Field(id);
+		this._fields[id] = new Field(id, element);
 		return this._fields[id];
 	};
 

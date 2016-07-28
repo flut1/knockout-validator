@@ -19,13 +19,17 @@ export default class Field extends FieldCollection implements IValidatableRule
 	private _validator:KnockoutValidator;
 	private _validatedValue:ko.Observable<any> = ko.observable(null).extend({deferred : true});
 
-	constructor(public id:string)
+	constructor(public id:string, private _element:HTMLElement)
 	{
 		super();
 
 		this.validatedValue = ko.pureComputed(() => this._validatedValue());
 		this._isValidSubscriptions.push(this.isValid.subscribe(this._isValidChangeHandler));
+	}
 
+	public get element():HTMLElement
+	{
+		return this._element;
 	}
 
 	public get value():ko.Observable<any>
@@ -120,12 +124,13 @@ export default class Field extends FieldCollection implements IValidatableRule
 		{
 			this._validatedValue(this._value());
 		}
+
 		this._applyValidationClasses();
 	};
 
 	private _applyValidationClasses():void
 	{
-		if(this._validator)
+		if(this._validator && this._element)
 		{
 			const isValid = this.isValid();
 			const modClasses:{[classname:string]:string} = {};
@@ -141,6 +146,8 @@ export default class Field extends FieldCollection implements IValidatableRule
 			{
 				modClasses[this._validator.classnames.isValidating] = isValid === null ? 'remove' : 'add';
 			}
+
+			Object.keys(modClasses).forEach(className => this._element.classList[modClasses[className]](className));
 		}
 	}
 
