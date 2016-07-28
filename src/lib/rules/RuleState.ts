@@ -46,7 +46,7 @@ export default class RuleState extends Disposable implements IValidatableRule {
 		}
 		else
 		{
-			this._isValid = ko.observable(null).extend({deferred : true});
+			this._isValid = ko.observable(null);
 			this._isValidating = ko.observable(0);
 			this.isValidated = ko.pureComputed(() => this._isValid() === null);
 			this.isValid = ko.pureComputed({

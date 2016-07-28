@@ -6,6 +6,7 @@ import createBindings from "./bindings/createBindings";
 import * as some from 'lodash/some';
 import IValidatable from "./interface/IValidatable";
 import scheduleKoResolve from "./utils/scheduleKoResolve";
+import fieldPlaceholder from "./const/fieldPlaceholder";
 
 createBindings(ko.bindingHandlers);
 
@@ -80,6 +81,11 @@ export default class KnockoutValidator extends Disposable implements IValidatabl
 			return scheduleKoResolve(isValid);
 		});
 	}
+
+	public getField = (name:string) =>
+	{
+		return this._fields().find(field => field.name === name) || fieldPlaceholder;
+	};
 
 	/**
 	 * Unregisters a field with this validator instance

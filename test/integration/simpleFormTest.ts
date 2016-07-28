@@ -60,4 +60,34 @@ describe('simple form integration', () =>
 			expect(testInput.className).to.contain('invalid');
 		});
 	});
+
+	it('should set the field isValid state to true after validate() with valid value', () =>
+	{
+		viewModel.testValidator.getField('test-input').value('1234abc5678');
+		return viewModel.testValidator.validate().then(() =>
+		{
+			expect(viewModel.testValidator.isValid()).to.equal(true);
+		});
+	});
+
+	it('should add a valid class when valid', () =>
+	{
+		viewModel.testValidator.classnames.isValid = 'valid';
+		const testInput = <HTMLInputElement> document.querySelector('.test-input');
+		viewModel.testValidator.getField('test-input').value('1234abc5678');
+		return viewModel.testValidator.validate().then(() =>
+		{
+			expect(testInput.className).to.contain('valid');
+		});
+	});
+
+	it('should not add a valid class when it is not explicitly enabled', () =>
+	{
+		const testInput = <HTMLInputElement> document.querySelector('.test-input');
+		viewModel.testValidator.getField('test-input').value('1234abc5678');
+		return viewModel.testValidator.validate().then(() =>
+		{
+			expect(testInput.className).to.equal('test-input');
+		});
+	});
 });

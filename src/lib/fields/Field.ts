@@ -133,21 +133,19 @@ export default class Field extends FieldCollection implements IValidatableRule
 		if(this._validator && this._element)
 		{
 			const isValid = this.isValid();
-			const modClasses:{[classname:string]:string} = {};
-			if(this._validator.classnames.isInvalid)
+			if(isValid !== null)
 			{
-				modClasses[this._validator.classnames.isInvalid] = isValid === false ? 'add' : 'remove';
-			}
-			if(this._validator.classnames.isValid)
-			{
-				modClasses[this._validator.classnames.isValid] = isValid === true ? 'add' : 'remove';
-			}
-			if(this._validator.classnames.isValidating)
-			{
-				modClasses[this._validator.classnames.isValidating] = isValid === null ? 'remove' : 'add';
-			}
+				const {classnames} = this._validator;
 
-			Object.keys(modClasses).forEach(className => this._element.classList[modClasses[className]](className));
+				if(classnames.isInvalid)
+				{
+					this._element.classList[isValid ? 'remove' : 'add'](classnames.isInvalid);
+				}
+				if(classnames.isValid)
+				{
+					this._element.classList[isValid ? 'add' : 'remove'](classnames.isValid);
+				}
+			}
 		}
 	}
 
