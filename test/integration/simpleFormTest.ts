@@ -30,6 +30,12 @@ describe('simple form integration', () =>
 		expect(viewModel.testValidator.fields()).to.have.lengthOf(1);
 	});
 
+	it('should return the registered the field when calling getField("test-input")', () =>
+	{
+		const testInput = <HTMLInputElement> document.querySelector('.test-input');
+		expect(viewModel.testValidator.getField('test-input').element).to.equal(testInput);
+	});
+
 	it('should resolve validate() with no value as invalid', () =>
 	{
 		return expect(viewModel.testValidator.validate()).to.eventually.equal(false);
@@ -51,6 +57,14 @@ describe('simple form integration', () =>
 		});
 	});
 
+	it('should set the validator isValid state to false after validate() with invalid value', () =>
+	{
+		return viewModel.testValidator.validate().then(() =>
+		{
+			expect(viewModel.testValidator.isValid()).to.equal(false);
+		});
+	});
+
 	it('should add an invalid class when invalid', () =>
 	{
 		viewModel.testValidator.classnames.isInvalid = 'invalid';
@@ -62,6 +76,15 @@ describe('simple form integration', () =>
 	});
 
 	it('should set the field isValid state to true after validate() with valid value', () =>
+	{
+		viewModel.testValidator.getField('test-input').value('1234abc5678');
+		return viewModel.testValidator.validate().then(() =>
+		{
+			expect(viewModel.testValidator.fields()[0].isValid()).to.equal(true);
+		});
+	});
+
+	it('should set the validator isValid state to true after validate() with valid value', () =>
 	{
 		viewModel.testValidator.getField('test-input').value('1234abc5678');
 		return viewModel.testValidator.validate().then(() =>

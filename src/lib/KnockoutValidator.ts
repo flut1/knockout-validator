@@ -4,6 +4,7 @@ import ClassnameOptions  from './options/Classnames';
 import Field from "./fields/Field";
 import createBindings from "./bindings/createBindings";
 import * as some from 'lodash/some';
+import * as find from 'lodash/find';
 import IValidatable from "./interface/IValidatable";
 import scheduleKoResolve from "./utils/scheduleKoResolve";
 import fieldPlaceholder from "./const/fieldPlaceholder";
@@ -84,7 +85,7 @@ export default class KnockoutValidator extends Disposable implements IValidatabl
 
 	public getField = (name:string) =>
 	{
-		return this._fields().find(field => field.name === name) || fieldPlaceholder;
+		return find(this._fields(), field => field.name === name) || fieldPlaceholder;
 	};
 
 	/**
