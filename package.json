@@ -18,7 +18,7 @@
     "clean": "npm-run-all clean:*",
     "clean:test": "shx rm -rf coverage",
     "clean:npm": "shx rm -rf lib npm index.js index.d.ts",
-    "clean:dist": "shx rm -rf dist \"seng-*.@(zip|tar.gz)\"",
+    "clean:dist": "shx rm -rf dist \"knockout-validator.@(zip|tar.gz)\"",
     "compile": "npm-run-all compile:*",
     "compile:npm": "npm run clean:npm && tsc -p ./ -d --outDir ./npm && shx mv \"./npm/*\" ./ && shx rm -rf ./npm",
     "compile:dist:typescript:es6": "tsc -p ./ -t es6 -m es6 --outDir ./dist/es6/",

@@ -11,21 +11,39 @@ before_install:
   - if [[ `npm -v` != 3* ]]; then npm i -g npm@3; fi
   - npm install -g typings
   - npm install -g codeclimate-test-reporter
-  - npm install knockout
+
+script:
+  - npm run build
+  - npm run validate
 
 after_script:
   - codeclimate-test-reporter < coverage/lcov.info
   - node_modules/.bin/coveralls < coverage/lcov.info
 
+before_deploy:
+  - npm run build:dist && node ./script/package-dist.js
+
 deploy:
-  provider: npm
-  email: 'floris.bernard@gmail.com'
-  api_key:
-    secure: "guWxP0nW7S/QZBvhdu7jCsOmnNv2EZlXJVlzb5Oz9E6cjw7LngOApNUZv+W8+nCf+HVaFC4gIzhrvd7hjIcir7RrvthRHIpNyhKRrBPLIHPjT5gMgr4QPI0THTOyjU4aBO3sZhTMqWQQY1b5Kupp+PW6ZMYDphC2pGTLWeVV/MbFh/qcC6lS/eh9G0OqzYfftYOoYdXBls79AnbSf54B0gxUnwO1yaDi0ZyFi+I6fMkZhP7BHaaUdp6gVrZyGva4UEs34x/PIQBrayXVe699o1o4a/aWS4uCxjzUoToGRQQFgrDt1lcZhhZZheRg7/uJ/xNZWTdlaXxhwU4gPr7eUWJ9qB8ubkUrIWKYSvNNfwJJLgD2uig/Ak2wTjMj/lwgI++x1+0v696YaWatqI3sVcM667i+syajAcSkINRJhi1cZ2dWJsC2FmL83ih6iVrE7413h2f8gr9rxIKHoYSsCQBtdjgpZSu61EOHgPApE677YLUiivGW+60yv0fGhTDdeMqUv9oYRfglOPepaYIbFLShHP2xgXKzK/JQiTdD9b4DNo1JbffaYPkvwki+7718eqbUJ0jQs6ONb8vyAzxAvft7mzF5WBKMCQdHQE0WMFocdzuvM19opseJ8GMJdQeWp+3AEbeibz9YKK5RSEpYaAB2H8B1sKPwusA9oq7VNfE="
-  on:
-    tags: true
-    node: '4'
-  skip_cleanup: true
+  - provider: npm
+    email: 'floris.bernard@gmail.com'
+    api_key:
+      secure: "guWxP0nW7S/QZBvhdu7jCsOmnNv2EZlXJVlzb5Oz9E6cjw7LngOApNUZv+W8+nCf+HVaFC4gIzhrvd7hjIcir7RrvthRHIpNyhKRrBPLIHPjT5gMgr4QPI0THTOyjU4aBO3sZhTMqWQQY1b5Kupp+PW6ZMYDphC2pGTLWeVV/MbFh/qcC6lS/eh9G0OqzYfftYOoYdXBls79AnbSf54B0gxUnwO1yaDi0ZyFi+I6fMkZhP7BHaaUdp6gVrZyGva4UEs34x/PIQBrayXVe699o1o4a/aWS4uCxjzUoToGRQQFgrDt1lcZhhZZheRg7/uJ/xNZWTdlaXxhwU4gPr7eUWJ9qB8ubkUrIWKYSvNNfwJJLgD2uig/Ak2wTjMj/lwgI++x1+0v696YaWatqI3sVcM667i+syajAcSkINRJhi1cZ2dWJsC2FmL83ih6iVrE7413h2f8gr9rxIKHoYSsCQBtdjgpZSu61EOHgPApE677YLUiivGW+60yv0fGhTDdeMqUv9oYRfglOPepaYIbFLShHP2xgXKzK/JQiTdD9b4DNo1JbffaYPkvwki+7718eqbUJ0jQs6ONb8vyAzxAvft7mzF5WBKMCQdHQE0WMFocdzuvM19opseJ8GMJdQeWp+3AEbeibz9YKK5RSEpYaAB2H8B1sKPwusA9oq7VNfE="
+    on:
+      tags: true
+      node: '4'
+    skip_cleanup: true
+
+  - provider: releases
+    api_key:
+      secure: "WGjHhX+KyKjU4WqKZ6HFKyXTcmGBsPMy04H+xBP30YxHoOvYSQcdEO+QpWSLj26DqnbBz6czpW98cPuxwGbkEvkhL9RlXkcUVvYw+xvq1Jnv5KUGW+okf7nvwxf+rY49OAd6nt/HQTWxzQOckPFOSKQchX3rLAYwMzmGTuPFxVIVX5ZvhdbKOeOw6PHJf+ECJ49MaI1SMVPdfrnI/5AHDwpsd5bGQX43UsgkYd1dwKpv/MiJRTOsWXRh64KuDWUBhOIChT/cVwINYPLIvlq/engdXH291tOTxUwLUON53DwGF8rtDRR7078yAY6pTNLLVfSpw3JPRR6x6Kflw+2z2YPz/2HaaWXky+tMz6KUmFrFmfaNQZzuaOZqBokdVTdMKxnv/qDIKSIW+sl3pHd4ywvednGBIFUw6gCbIbfvezSQBByc/6KMKgnoAmFwfdf/wBPqxiF651GaZvptrZ8wvXpnnWqzNlpYeqFKTsKSOnm5aWdyrQclER3e1tAwDMr3Ibe/c7AJQLCJ/cnRE/eXrPkmop0X3EnAee9fO6DUWGf2mvP7X2/I0WK2GNqiplJ8OhLmh7fOSqSQSIlo3LS2+m7LzGmR3zwlhtTp4vnp/7mpoiYG8KBrXOLKTdQoFL2+FYT/RW2tCvKX6aOsbYjr/waUJ5qwQlAUgjacYAF1q4M="
+    file:
+      - "knockout-validator.zip"
+      - "knockout-validator.tar.gz"
+    file_glob: true
+    on:
+      tags: true
+      node: '4'
+    skip_cleanup: true
 
 addons:
   code_climate:
