@@ -8,23 +8,96 @@ describe('Field', () =>
 {
 	describe('with validateOn prop of "value"', () =>
 	{
-		const testValidator = new KnockoutValidator();
-		const testField = new Field('test', null);
-		testField.name = 'testField';
-		testField.validator = testValidator;
-		testField.validateOn = 'value';
-		testField.value = ko.observable('');
-		testField.rule = /^[0-9]+$/;
-
-		it('should set the isValid state of the field to true after passing a valid value', done =>
+		describe('after setting a valid value', () =>
 		{
+			const testValidator = new KnockoutValidator();
+			const testField = new Field('test', null);
+			testField.name = 'testField';
+			testField.validator = testValidator;
+			testField.validateOn = 'value';
+			testField.value = ko.observable('');
+			testField.rule = /^[0-9]+$/;
 			testField.value('328492');
-			ko.tasks.schedule(() =>
+
+			it('should set the isValid state of the field to true', done =>
 			{
-				expect(testField.isValid()).to.equal(true);
-				done();
+				ko.tasks.schedule(() =>
+				{
+					expect(testField.isValid()).to.equal(true);
+					done();
+				});
+			});
+		});
+		describe('after setting an invalid value', () =>
+		{
+			const testValidator = new KnockoutValidator();
+			const testField = new Field('test', null);
+			testField.name = 'testField';
+			testField.validator = testValidator;
+			testField.validateOn = 'value';
+			testField.value = ko.observable('');
+			testField.rule = /^[0-9]+$/;
+			testField.value('3284a92');
+
+			it('should set the isValid state of the field to false', done =>
+			{
+				ko.tasks.schedule(() =>
+				{
+					expect(testField.isValid()).to.equal(false);
+					done();
+				});
 			});
 		});
 	});
+	describe('with validateOn prop of "value(200)"', () =>
+	{
+		describe('when calling value multiple times within 200ms', () =>
+		{
+			const testValidator = new KnockoutValidator();
+			const testField = new Field('test', null);
+			testField.name = 'testField';
+			testField.validator = testValidator;
+			testField.validateOn = 'value(200)';
+			testField.value = ko.observable('');
+			let ruleCallCount = 0;
+			testField.rule = () =>
+			{
+				ruleCallCount++;
+				return true;
+			};
 
+			testField.value('0');
+			setTimeout(() =>
+			{
+				testField.value('1');
+			}, 100);
+
+			setTimeout(() =>
+			{
+				testField.value('2');
+			}, 200);
+
+			setTimeout(() =>
+			{
+				testField.value('3');
+			}, 250);
+
+			setTimeout(() =>
+			{
+				testField.value('4');
+			}, 400);
+
+			it('should only call the validation method once', done =>
+			{
+				setTimeout(() =>
+				{
+					ko.tasks.schedule(() =>
+					{
+						expect(ruleCallCount).to.equal(1);
+						done();
+					});
+				}, 700);
+			});
+		});
+	});
 });
