@@ -100,4 +100,47 @@ describe('Field', () =>
 			});
 		});
 	});
+	describe('validating with an asynchronous rule that resolves with true', () =>
+	{
+		const testField = new Field('test', null);
+		testField.name = 'testField';
+		testField.validateOn = 'value';
+		testField.value = ko.observable('');
+		testField.rule = () => new Promise<boolean>(resolve =>
+		{
+			setTimeout(() =>
+			{
+				resolve(true);
+			}, 600);
+		});
+
+		const validating = testField.validate();
+		let isValidating;
+		const scheduleKnockout = new Promise<void>(resolve =>
+		{
+			ko.tasks.schedule(() =>
+			{
+				isValidating = testField.isValidating();
+				resolve();
+			});
+		});
+		it('should set the isValidating() observable to true', () =>
+		{
+			return scheduleKnockout.then(() =>
+			{
+				expect(isValidating).to.equal(true);
+			});
+		});
+		it('should resolve with true', () =>
+		{
+			return expect(validating).to.eventually.equal(true);
+		});
+		it('should set isValidating() observable to false after validation resolves', () =>
+		{
+			return validating.then(() =>
+			{
+				expect(testField.isValidating()).to.equal(false);
+			});
+		});
+	});
 });
