@@ -39,6 +39,7 @@ export default class Field extends FieldCollection implements IValidatableRule
 
 	public set value(value:ko.Observable<any>)
 	{
+		disposeSubscriptionArray(this._valueSubscriptions);
 		if(!ko.isObservable(value))
 		{
 			throw new Error(`Non-observable value "${value}" passed to knockout-validator Field instance.`);
@@ -51,7 +52,6 @@ export default class Field extends FieldCollection implements IValidatableRule
 		{
 			this._valueSubscriptions.push(value.subscribe(this._onValueChange));
 		}
-		disposeSubscriptionArray(this._valueSubscriptions);
 		this._value = value;
 	}
 

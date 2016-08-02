@@ -9,6 +9,8 @@ type BindingDescriptor = {
 	binding:ValidatorFieldBinding
 };
 
+const ensureObservable = (value:any) => ko.isObservable(value) ? value : ko.observable(value);
+
 const getAllBindingValues = (element:HTMLElement, allBindingsAccessor:ko.AllBindingsAccessor, bindingContext:ko.BindingContext<any>):{[name:string]:BindingDescriptor} =>
 {
 	const shorthandValues = allBindingsAccessor.get(SHORTHAND_BINDING_NAME) || {};
@@ -182,8 +184,6 @@ const initField = (element:any, id:string, bindingValues:{[name:string]:BindingD
 		field.dispose();
 	});
 };
-
-const ensureObservable = (value:any) => ko.isObservable(value) ? value : ko.observable(value);
 
 export default (isInit:boolean, bindingName:string,
                 element:any, valueAccessor:() => any, allBindingsAccessor:ko.AllBindingsAccessor, viewModel:any, bindingContext:ko.BindingContext<any>):ko.BindingHandlerControlsDescendant|void =>

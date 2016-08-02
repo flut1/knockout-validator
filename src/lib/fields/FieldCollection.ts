@@ -86,14 +86,14 @@ abstract class FieldCollection extends Disposable {
 			this._autoValidate = false;
 			this._rateLimitAutoValidate = 0;
 
-			if(this.validateOn === 'value')
+			if(validateOn === 'value')
 			{
 				this._autoValidate = true;
 			}
 			else
 			{
 				let rateLimitTest = /value\s?\(\s?([0-9]+)\s?\)/;
-				let result = rateLimitTest.exec(this.validateOn);
+				let result = rateLimitTest.exec(validateOn);
 
 				if(result !== null)
 				{
@@ -150,7 +150,7 @@ abstract class FieldCollection extends Disposable {
 		super.dispose();
 	}
 
-	protected _onValueChange()
+	protected _onValueChange = () =>
 	{
 		if(this._autoValidate)
 		{
@@ -168,13 +168,13 @@ abstract class FieldCollection extends Disposable {
 						this.validate();
 					}, this._rateLimitAutoValidate);
 				}
-				else
-				{
-					this.validate();
-				}
+			}
+			else
+			{
+				this.validate();
 			}
 		}
-	}
+	};
 
 	protected _setRuleFromBindingValue(ruleBindingValue:RuleBindingValue):RuleState
 	{

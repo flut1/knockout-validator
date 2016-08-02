@@ -1,0 +1,5 @@
+<form data-bind="validate : {with : testValidator}">
+	<input type="text" class="test-input" data-bind="validate: {name: 'test-input', rule: /^[0-9]+$/, on : 'value'}" />
+
+	<button type="submit" class="simple-form-submit">validate</button>
+</form>

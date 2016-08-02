@@ -36,6 +36,11 @@ describe('simple form integration', () =>
 		expect(viewModel.testValidator.getField('test-input').element).to.equal(testInput);
 	});
 
+	it('should return a placeholder field when calling getField("unknown-name")', () =>
+	{
+		expect(viewModel.testValidator.getField('unknown-name').element).to.equal(null);
+	});
+
 	it('should resolve validate() with no value as invalid', () =>
 	{
 		return expect(viewModel.testValidator.validate()).to.eventually.equal(false);
