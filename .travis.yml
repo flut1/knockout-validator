@@ -38,8 +38,8 @@ deploy:
     api_key:
       secure: "WGjHhX+KyKjU4WqKZ6HFKyXTcmGBsPMy04H+xBP30YxHoOvYSQcdEO+QpWSLj26DqnbBz6czpW98cPuxwGbkEvkhL9RlXkcUVvYw+xvq1Jnv5KUGW+okf7nvwxf+rY49OAd6nt/HQTWxzQOckPFOSKQchX3rLAYwMzmGTuPFxVIVX5ZvhdbKOeOw6PHJf+ECJ49MaI1SMVPdfrnI/5AHDwpsd5bGQX43UsgkYd1dwKpv/MiJRTOsWXRh64KuDWUBhOIChT/cVwINYPLIvlq/engdXH291tOTxUwLUON53DwGF8rtDRR7078yAY6pTNLLVfSpw3JPRR6x6Kflw+2z2YPz/2HaaWXky+tMz6KUmFrFmfaNQZzuaOZqBokdVTdMKxnv/qDIKSIW+sl3pHd4ywvednGBIFUw6gCbIbfvezSQBByc/6KMKgnoAmFwfdf/wBPqxiF651GaZvptrZ8wvXpnnWqzNlpYeqFKTsKSOnm5aWdyrQclER3e1tAwDMr3Ibe/c7AJQLCJ/cnRE/eXrPkmop0X3EnAee9fO6DUWGf2mvP7X2/I0WK2GNqiplJ8OhLmh7fOSqSQSIlo3LS2+m7LzGmR3zwlhtTp4vnp/7mpoiYG8KBrXOLKTdQoFL2+FYT/RW2tCvKX6aOsbYjr/waUJ5qwQlAUgjacYAF1q4M="
     file:
-      - "knockout-validator.zip"
-      - "knockout-validator.tar.gz"
+      - "knockout-validator-*.zip"
+      - "knockout-validator-*.tar.gz"
     file_glob: true
     on:
       tags: true

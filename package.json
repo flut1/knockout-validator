@@ -1,6 +1,6 @@
 {
   "name": "knockout-validator",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Painless form validation management using knockout.js",
   "main": "index.js",
   "typings": "index",
