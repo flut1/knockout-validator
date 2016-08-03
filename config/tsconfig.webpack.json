@@ -11,7 +11,8 @@
     "allowSyntheticDefaultImports": true,
     "sourceMap": false,
     "inlineSourceMap": false,
-    "outDir": "./"
+    "outDir": "./",
+    "lib": ["es5", "es2015.promise", "dom"]
   },
   "files": [
     "typings/index.d.ts"

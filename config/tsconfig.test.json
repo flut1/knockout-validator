@@ -10,7 +10,8 @@
     "removeComments": false,
     "allowSyntheticDefaultImports": true,
     "sourceMap": false,
-    "inlineSourceMap": true
+    "inlineSourceMap": true,
+    "lib": ["es5", "es2015.promise", "dom"]
   },
   "files": [
     "typings/index.d.ts"

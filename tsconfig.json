@@ -10,7 +10,8 @@
     "experimentalDecorators": true,
     "allowSyntheticDefaultImports": true,
     "outDir": "./",
-    "moduleResolution": "node"
+    "moduleResolution": "node",
+    "lib": ["es5", "es2015.promise", "dom"]
   },
   "files": [
     "./typings/index.d.ts",

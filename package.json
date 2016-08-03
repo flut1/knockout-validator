@@ -79,7 +79,7 @@
     "shx": "^0.1.2",
     "tslint": "^3.3.0",
     "typedoc": "^0.4.3",
-    "typescript": "^1.8.0",
+    "typescript": "^2.0.0",
     "webpack": "^1.12.12",
     "webpack-validator": "^2.1.3"
   },

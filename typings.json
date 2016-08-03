@@ -10,7 +10,6 @@
     "knockout": "registry:npm/knockout#3.4.0+20160516171930"
   },
   "globalDependencies": {
-    "es6-promise": "registry:dt/es6-promise#0.0.0+20160614011821",
     "lodash": "registry:dt/lodash#0.0.0+20160720001309",
     "qs": "registry:dt/qs#6.2.0+20160707010053",
     "webpack-env": "registry:dt/webpack-env#1.12.2+20160316155526"
