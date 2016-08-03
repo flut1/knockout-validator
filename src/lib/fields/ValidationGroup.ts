@@ -56,9 +56,9 @@ export default class ValidationGroup extends FieldCollection implements IValidat
 
 	}
 
-	public get values(): ValueMap
+	public get values(): ko.PureComputed<ValueMap>
 	{
-		return this._value();
+		return this._value;
 	};
 }
 

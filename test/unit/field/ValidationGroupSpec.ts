@@ -10,11 +10,7 @@ describe('ValidationGroup', () =>
 	{
 		it('should register the fields with the group', () =>
 		{
-			const validationGroup = new ValidationGroup(values =>
-			{
-				const fullName = values['first-name'] + ' ' + values['last-name'];
-				return (fullName === 'John Doe');
-			});
+			const validationGroup = new ValidationGroup(values => true);
 
 			const firstNameField = new Field('0', null);
 			firstNameField.name = 'first-name';
@@ -51,7 +47,62 @@ describe('ValidationGroup', () =>
 
 			it('should resolve with false', () =>
 			{
-				expect(validationGroup.validate()).to.eventually.equal(false);
+				return expect(validationGroup.validate()).to.eventually.equal(false);
+			});
+		});
+
+		describe('with values set on the fields', () =>
+		{
+			const validationGroup = new ValidationGroup(values => true);
+
+			const firstNameField = new Field('0', null);
+			firstNameField.name = 'first-name';
+			firstNameField.value = ko.observable();
+			firstNameField.groups = validationGroup;
+
+			const lastNameField = new Field('1', null);
+			lastNameField.name = 'last-name';
+			lastNameField.value = ko.observable();
+			lastNameField.groups = validationGroup;
+
+			//noinspection TypeScriptUnresolvedFunction
+			firstNameField.value('John');
+			//noinspection TypeScriptUnresolvedFunction
+			lastNameField.value('Doe');
+			it('should save the values to the validationGroup values observable', () =>
+			{
+				const values = validationGroup.values();
+				expect(values['first-name']).to.equal('John');
+				expect(values['last-name']).to.equal('Doe');
+			});
+		});
+
+		describe('running validate() with correct values set', () =>
+		{
+			const validationGroup = new ValidationGroup(values =>
+			{
+				const fullName = values['first-name'] + ' ' + values['last-name'];
+				return (fullName === 'John Doe');
+			});
+
+			const firstNameField = new Field('0', null);
+			firstNameField.name = 'first-name';
+			firstNameField.value = ko.observable();
+			firstNameField.groups = validationGroup;
+
+			const lastNameField = new Field('1', null);
+			lastNameField.name = 'last-name';
+			lastNameField.value = ko.observable();
+			lastNameField.groups = validationGroup;
+
+			//noinspection TypeScriptUnresolvedFunction
+			firstNameField.value('John');
+			//noinspection TypeScriptUnresolvedFunction
+			lastNameField.value('Doe');
+			it('should resolve with true', () =>
+			{
+				const validation = validationGroup.validate();
+				return expect(validation).to.eventually.equal(true);
 			});
 		});
 	});
