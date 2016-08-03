@@ -122,7 +122,7 @@ abstract class FieldCollection extends Disposable {
 		const rule = this._rule();
 		if(!rule)
 		{
-			throw new Error(`Trying to validate field ${name} without a validation rule.`);
+			throw new Error(`Trying to validate field without a validation rule.`);
 		}
 
 		if(!this._currentValidation)

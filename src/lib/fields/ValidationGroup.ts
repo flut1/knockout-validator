@@ -9,8 +9,12 @@ export default class ValidationGroup extends FieldCollection implements IValidat
 	public fields: ko.PureComputed<Array<Field>> = ko.pureComputed(() => this._fields());
 
 	protected _value: ko.PureComputed<ValueMap> = ko.pureComputed(() => this._fields().reduce(
-		(values: ValueMap, field: Field) => values[field.name] = field.value(), {})
-	);
+		(values: ValueMap, field: Field) =>
+		{
+			values[field.name] = field.value();
+			return values;
+		}, {}
+	));
 	private _fields: ko.ObservableArray<Field> = ko.observableArray<Field>([]);
 
 	constructor(rule: RuleBindingValue)
@@ -30,7 +34,7 @@ export default class ValidationGroup extends FieldCollection implements IValidat
 		{
 			throw new Error('Trying to add field without value to ValidationGroup');
 		}
-		else if(!ko.isObservable(field))
+		else if(!ko.isObservable(field.value))
 		{
 			throw new Error('Trying to add field with non-observable value to ValidationGroup');
 		}
