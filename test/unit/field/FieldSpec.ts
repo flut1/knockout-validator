@@ -17,6 +17,7 @@ describe('Field', () =>
 			testField.validateOn = 'value';
 			testField.value = ko.observable('');
 			testField.rule = /^[0-9]+$/;
+			//noinspection TypeScriptUnresolvedFunction
 			testField.value('328492');
 
 			it('should set the isValid state of the field to true', done =>
@@ -37,6 +38,7 @@ describe('Field', () =>
 			testField.validateOn = 'value';
 			testField.value = ko.observable('');
 			testField.rule = /^[0-9]+$/;
+			//noinspection TypeScriptUnresolvedFunction
 			testField.value('3284a92');
 
 			it('should set the isValid state of the field to false', done =>
@@ -66,24 +68,29 @@ describe('Field', () =>
 				return true;
 			};
 
+			//noinspection TypeScriptUnresolvedFunction
 			testField.value('0');
 			setTimeout(() =>
 			{
+				//noinspection TypeScriptUnresolvedFunction
 				testField.value('1');
 			}, 100);
 
 			setTimeout(() =>
 			{
+				//noinspection TypeScriptUnresolvedFunction
 				testField.value('2');
 			}, 200);
 
 			setTimeout(() =>
 			{
+				//noinspection TypeScriptUnresolvedFunction
 				testField.value('3');
 			}, 250);
 
 			setTimeout(() =>
 			{
+				//noinspection TypeScriptUnresolvedFunction
 				testField.value('4');
 			}, 400);
 
