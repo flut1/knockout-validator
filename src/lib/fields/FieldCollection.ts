@@ -40,7 +40,7 @@ abstract class FieldCollection extends Disposable {
 			read : () =>
 			{
 				const rule = this._rule();
-				return rule ? rule.isValid() : false;
+				return rule ? rule.isValid() : null;
 			},
 			write : (isValid:boolean) =>
 			{

@@ -38,6 +38,7 @@ export default class ValidationGroup extends FieldCollection implements IValidat
 		{
 			throw new Error('Trying to add field with non-observable value to ValidationGroup');
 		}
+
 		this._valueSubscriptions.push(field.value.subscribe(this._onValueChange));
 	}
 

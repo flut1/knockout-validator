@@ -77,6 +77,53 @@ describe('ValidationGroup', () =>
 			});
 		});
 
+		describe('with validateOn set to "value"', () =>
+		{
+
+			it('should auto-validate when one of the fields values change', done =>
+			{
+				const validationGroup = new ValidationGroup(values => true);
+				validationGroup.validateOn = 'value';
+
+				const firstNameField = new Field('0', null);
+				firstNameField.name = 'first-name';
+				firstNameField.value = ko.observable();
+				firstNameField.groups = validationGroup;
+
+				const lastNameField = new Field('1', null);
+				lastNameField.name = 'last-name';
+				lastNameField.value = ko.observable();
+				lastNameField.groups = validationGroup;
+
+				//noinspection TypeScriptUnresolvedFunction
+				firstNameField.value('John');
+
+				ko.tasks.schedule(() =>
+				{
+					expect(validationGroup.isValidated()).to.equal(true);
+					done();
+				});
+			});
+
+			it('should should initially not be validated', () =>
+			{
+				const validationGroup = new ValidationGroup(values => true);
+				validationGroup.validateOn = 'value';
+
+				const firstNameField = new Field('0', null);
+				firstNameField.name = 'first-name';
+				firstNameField.value = ko.observable();
+				firstNameField.groups = validationGroup;
+
+				const lastNameField = new Field('1', null);
+				lastNameField.name = 'last-name';
+				lastNameField.value = ko.observable();
+				lastNameField.groups = validationGroup;
+
+				expect(validationGroup.isValidated()).to.equal(false);
+			});
+		});
+
 		describe('running validate() with correct values set', () =>
 		{
 			const validationGroup = new ValidationGroup(values =>
