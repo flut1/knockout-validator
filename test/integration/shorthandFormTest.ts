@@ -44,11 +44,14 @@ describe('shorthand form integration', () =>
 	it('should auto-validate the field after setting a value', done =>
 	{
 		// should auto validate because of the 'on' binding
-		viewModel.testValidator.getField('test-input').value('12345678');
+		const testInput = <HTMLInputElement> document.querySelector('.test-input');
+		testInput.value = '12345678';
+		ko.utils.triggerEvent(testInput, 'change');
 		// we have to wait for the knockout scheduler before the observables update
 		ko.tasks.schedule(() =>
 		{
-			expect(viewModel.testValidator.fields()[0].isValid()).not.to.equal(null);
+			expect(viewModel.testValidator.fields()[0].isValidated()).to.equal(true);
+			expect(viewModel.testValidator.isValidated()).to.equal(true);
 			done();
 		});
 	});

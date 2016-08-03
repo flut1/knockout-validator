@@ -9,8 +9,12 @@ export default class ValidationGroup extends FieldCollection implements IValidat
 	public fields: ko.PureComputed<Array<Field>> = ko.pureComputed(() => this._fields());
 
 	protected _value: ko.PureComputed<ValueMap> = ko.pureComputed(() => this._fields().reduce(
-		(values: ValueMap, field: Field) => values[field.name] = field.value(), {})
-	);
+		(values: ValueMap, field: Field) =>
+		{
+			values[field.name] = field.value();
+			return values;
+		}, {}
+	));
 	private _fields: ko.ObservableArray<Field> = ko.observableArray<Field>([]);
 
 	constructor(rule: RuleBindingValue)
@@ -25,15 +29,16 @@ export default class ValidationGroup extends FieldCollection implements IValidat
 
 	public addField(field: Field): void
 	{
+		if(this._fields().indexOf(field) !== -1)
+		{
+			throw new Error('Trying to add the same Field to a ValidationGroup twice');
+		}
 		this._fields.push(field);
 		if(typeof field.value === 'undefined')
 		{
 			throw new Error('Trying to add field without value to ValidationGroup');
 		}
-		else if(!ko.isObservable(field))
-		{
-			throw new Error('Trying to add field with non-observable value to ValidationGroup');
-		}
+
 		this._valueSubscriptions.push(field.value.subscribe(this._onValueChange));
 	}
 
@@ -52,9 +57,9 @@ export default class ValidationGroup extends FieldCollection implements IValidat
 
 	}
 
-	public get values(): ValueMap
+	public get values(): ko.PureComputed<ValueMap>
 	{
-		return this._value();
+		return this._value;
 	};
 }
 

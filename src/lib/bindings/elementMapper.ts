@@ -78,6 +78,7 @@ export class ElementMapper
 		{
 			throw new Error(`Trying to remove a field with non-existing id "${id}"`);
 		}
+		this._fields[id] = null;
 	}
 }
 

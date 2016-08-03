@@ -40,7 +40,7 @@ abstract class FieldCollection extends Disposable {
 			read : () =>
 			{
 				const rule = this._rule();
-				return rule ? rule.isValid() : false;
+				return rule ? rule.isValid() : null;
 			},
 			write : (isValid:boolean) =>
 			{
@@ -119,10 +119,21 @@ abstract class FieldCollection extends Disposable {
 
 	public validate = (value?:any):Promise<boolean> =>
 	{
+		if(this.isDisposed())
+		{
+			console.warn('Trying to validate an already disposed field.');
+			return Promise.resolve(null);
+		}
+
 		const rule = this._rule();
 		if(!rule)
 		{
-			throw new Error(`Trying to validate field ${name} without a validation rule.`);
+			throw new Error(`Trying to validate field without a validation rule.`);
+		}
+		if(rule.isDisposed())
+		{
+			console.warn('Trying to validate a field with a disposed rule');
+			return Promise.resolve(null);
 		}
 
 		if(!this._currentValidation)
@@ -186,7 +197,7 @@ abstract class FieldCollection extends Disposable {
 	protected _disposeRule():void
 	{
 		const currentRule = this._rule();
-		if(currentRule)
+		if(currentRule && !currentRule.isDisposed())
 		{
 			currentRule.dispose();
 		}

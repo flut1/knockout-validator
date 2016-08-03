@@ -82,7 +82,9 @@ describe('simple form integration', () =>
 
 	it('should set the field isValid state to true after validate() with valid value', () =>
 	{
-		viewModel.testValidator.getField('test-input').value('1234abc5678');
+		const testInput = <HTMLInputElement> document.querySelector('.test-input');
+		testInput.value = '1234abc5678';
+		ko.utils.triggerEvent(testInput, 'change');
 		return viewModel.testValidator.validate().then(() =>
 		{
 			expect(viewModel.testValidator.fields()[0].isValid()).to.equal(true);
@@ -91,7 +93,9 @@ describe('simple form integration', () =>
 
 	it('should set the validator isValid state to true after validate() with valid value', () =>
 	{
-		viewModel.testValidator.getField('test-input').value('1234abc5678');
+		const testInput = <HTMLInputElement> document.querySelector('.test-input');
+		testInput.value = '1234abc5678';
+		ko.utils.triggerEvent(testInput, 'change');
 		return viewModel.testValidator.validate().then(() =>
 		{
 			expect(viewModel.testValidator.isValid()).to.equal(true);
@@ -102,7 +106,8 @@ describe('simple form integration', () =>
 	{
 		viewModel.testValidator.classnames.isValid = 'valid';
 		const testInput = <HTMLInputElement> document.querySelector('.test-input');
-		viewModel.testValidator.getField('test-input').value('1234abc5678');
+		testInput.value = '1234abc5678';
+		ko.utils.triggerEvent(testInput, 'change');
 		return viewModel.testValidator.validate().then(() =>
 		{
 			expect(testInput.className).to.contain('valid');
@@ -112,10 +117,51 @@ describe('simple form integration', () =>
 	it('should not add a valid class when it is not explicitly enabled', () =>
 	{
 		const testInput = <HTMLInputElement> document.querySelector('.test-input');
-		viewModel.testValidator.getField('test-input').value('1234abc5678');
+		testInput.value = '1234abc5678';
+		ko.utils.triggerEvent(testInput, 'change');
 		return viewModel.testValidator.validate().then(() =>
 		{
 			expect(testInput.className).to.equal('test-input');
 		});
 	});
 });
+
+describe('simple form disposal', () =>
+{
+	// setup the form
+	const viewModel = {
+		testValidator: new KnockoutValidator()
+	};
+	const wrapper = document.createElement('div');
+	document.body.appendChild(wrapper);
+	wrapper.innerHTML = simpleForm;
+	ko.applyBindings(viewModel, wrapper);
+	ko.tasks.runEarly();
+
+	// get reference to field and rule
+	const field = viewModel.testValidator.fields()[0];
+	const ruleState = field.getRuleState();
+
+	// remove from dom using knockout
+	ko.cleanNode(wrapper);
+	wrapper.parentElement.removeChild(wrapper);
+
+	it('should dispose the field after removal from dom', () =>
+	{
+		expect(field.isDisposed()).to.equal(true);
+	});
+
+	it('should have removed the field from the validator instance', () =>
+	{
+		expect(viewModel.testValidator.fields()).to.have.lengthOf(0);
+	});
+
+	it('should dispose the rule after removal from dom', () =>
+	{
+		expect(ruleState.isDisposed()).to.equal(true);
+	});
+
+
+	viewModel.testValidator.dispose();
+});
+
