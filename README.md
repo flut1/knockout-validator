@@ -6,7 +6,7 @@
 
 # knockout-validator
 
-Add a description here...
+TODO
 
 
 ## Installation
