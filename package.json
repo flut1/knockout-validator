@@ -81,6 +81,7 @@
     "typedoc": "^0.4.3",
     "typescript": "^2.0.0",
     "webpack": "^1.12.12",
+    "webpack-system-register": "^1.3.2",
     "webpack-validator": "^2.1.3"
   },
   "dependencies": {
