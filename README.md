@@ -17,39 +17,19 @@ Add a description here...
 npm i -S knockout-validator
 ```
 
-### manual
+### other
 
-You can clone this repository and build the distribution files for use in
-the browser yourself, and grab one of the following files from the
-`/dist/` folder:
-
-```sh
-git clone git@github.com:flut1/knockout-validator.git
-cd knockout-validator
-npm i
-npm run build-dist
-```
-
-- **/dist/umd** (bundled with webpack)
-- **/dist/amd** (bundled with webpack)
-- **/dist/commonjs2** (bundled with webpack, but why don't you use npm?)
-- **/dist/browser** (bundled with webpack, available as `window.KnockoutValidator`)
-- **/dist/system**
-- **/dist/es6**
+Browser, amd, commonjs, umd, systemjs and es6 versions of this module 
+are available on the [Github Releases](https://github.com/flut1/knockout-validator/releases).
 
 ## Usage
 
-```ts
-import KnockoutValidator from 'knockout-validator';
-// import KnockoutValidator from 'knockout-validator/lib/classname';
-
-// do something with KnockoutValidator
-```
+TODO
 
 
 ## Documentation
 
-View the [generated documentation](https://rawgit.com/flut1/knockout-validator/master/doc/typedoc/index.html).
+TODO
 
 
 ## Building
