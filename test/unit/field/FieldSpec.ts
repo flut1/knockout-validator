@@ -102,41 +102,59 @@ describe('Field', () =>
 	});
 	describe('validating with an asynchronous rule that resolves with true', () =>
 	{
-		const testField = new Field('test', null);
-		testField.name = 'testField';
-		testField.validateOn = 'value';
-		testField.value = ko.observable('');
-		testField.rule = () => new Promise<boolean>(resolve =>
+		it('should set the isValidating() observable to true', done =>
 		{
-			setTimeout(() =>
+			const testField = new Field('test', null);
+			testField.name = 'testField';
+			testField.validateOn = 'value';
+			testField.value = ko.observable('');
+			testField.rule = () => new Promise<boolean>(resolve =>
 			{
-				resolve(true);
-			}, 600);
-		});
+				setTimeout(() =>
+				{
+					resolve(true);
+				}, 600);
+			});
 
-		const validating = testField.validate();
-		let isValidating;
-		const scheduleKnockout = new Promise<void>(resolve =>
-		{
+			testField.validate();
 			ko.tasks.schedule(() =>
 			{
-				isValidating = testField.isValidating();
-				resolve();
-			});
-		});
-		it('should set the isValidating() observable to true', () =>
-		{
-			return scheduleKnockout.then(() =>
-			{
-				expect(isValidating).to.equal(true);
+				expect(testField.isValidating()).to.equal(true);
+				done();
 			});
 		});
 		it('should resolve with true', () =>
 		{
+			const testField = new Field('test', null);
+			testField.name = 'testField';
+			testField.validateOn = 'value';
+			testField.value = ko.observable('');
+			testField.rule = () => new Promise<boolean>(resolve =>
+			{
+				setTimeout(() =>
+				{
+					resolve(true);
+				}, 600);
+			});
+
+			const validating = testField.validate();
 			return expect(validating).to.eventually.equal(true);
 		});
 		it('should set isValidating() observable to false after validation resolves', () =>
 		{
+			const testField = new Field('test', null);
+			testField.name = 'testField';
+			testField.validateOn = 'value';
+			testField.value = ko.observable('');
+			testField.rule = () => new Promise<boolean>(resolve =>
+			{
+				setTimeout(() =>
+				{
+					resolve(true);
+				}, 600);
+			});
+
+			const validating = testField.validate();
 			return validating.then(() =>
 			{
 				expect(testField.isValidating()).to.equal(false);
