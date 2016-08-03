@@ -6,6 +6,38 @@ const {expect} = chai;
 
 describe('ValidationGroup', () =>
 {
+	describe('addField()', () =>
+	{
+		describe('called twice with the same field', () =>
+		{
+			const validationGroup = new ValidationGroup(values => true);
+			const testField = new Field('0', null);
+			testField.value = ko.observable();
+
+			it('should throw an error', () =>
+			{
+				expect(() =>
+				{
+					validationGroup.addField(testField);
+					validationGroup.addField(testField);
+				}).to.throw(Error);
+			});
+		});
+		describe('called with a field with no value', () =>
+		{
+			const validationGroup = new ValidationGroup(values => true);
+			const testField = new Field('0', null);
+
+			it('should throw an error', () =>
+			{
+				expect(() =>
+				{
+					validationGroup.addField(testField);
+				}).to.throw(Error);
+			});
+		});
+	});
+
 	describe('with a first and last name field', () =>
 	{
 		it('should register the fields with the group', () =>

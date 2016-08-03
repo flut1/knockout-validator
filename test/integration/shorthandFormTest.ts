@@ -50,7 +50,8 @@ describe('shorthand form integration', () =>
 		// we have to wait for the knockout scheduler before the observables update
 		ko.tasks.schedule(() =>
 		{
-			expect(viewModel.testValidator.fields()[0].isValid()).not.to.equal(null);
+			expect(viewModel.testValidator.fields()[0].isValidated()).to.equal(true);
+			expect(viewModel.testValidator.isValidated()).to.equal(true);
 			done();
 		});
 	});

@@ -125,3 +125,43 @@ describe('simple form integration', () =>
 		});
 	});
 });
+
+describe('simple form disposal', () =>
+{
+	// setup the form
+	const viewModel = {
+		testValidator: new KnockoutValidator()
+	};
+	const wrapper = document.createElement('div');
+	document.body.appendChild(wrapper);
+	wrapper.innerHTML = simpleForm;
+	ko.applyBindings(viewModel, wrapper);
+	ko.tasks.runEarly();
+
+	// get reference to field and rule
+	const field = viewModel.testValidator.fields()[0];
+	const ruleState = field.getRuleState();
+
+	// remove from dom using knockout
+	ko.cleanNode(wrapper);
+	wrapper.parentElement.removeChild(wrapper);
+
+	it('should dispose the field after removal from dom', () =>
+	{
+		expect(field.isDisposed()).to.equal(true);
+	});
+
+	it('should have removed the field from the validator instance', () =>
+	{
+		expect(viewModel.testValidator.fields()).to.have.lengthOf(0);
+	});
+
+	it('should dispose the rule after removal from dom', () =>
+	{
+		expect(ruleState.isDisposed()).to.equal(true);
+	});
+
+
+	viewModel.testValidator.dispose();
+});
+
